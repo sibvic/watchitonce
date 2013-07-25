@@ -20,7 +20,7 @@ namespace WatchItOnce.MediaFileIterator
 
         public MediaFile GetNextFile()
         {
-            if (mFiles.Length >= mNextFile)
+            if (mNextFile >= mFiles.Length)
                 return null;
 
             return mFiles[mNextFile++];

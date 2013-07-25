@@ -37,7 +37,7 @@ namespace Implementation
       /// <summary>
       /// Initializes media library with default arguments
       /// </summary>
-      public MediaPlayerFactory()
+      public MediaPlayerFactory(string playerPath)
       {
          string[] args = new string[] 
          {
@@ -46,7 +46,7 @@ namespace Implementation
 		      "--ignore-config", 
             "--no-osd",
             "--disable-screensaver",
-		      "--plugin-path=./plugins" 
+		      "--plugin-path=" + System.IO.Path.Combine(playerPath, "plugins")
          };
 
          Initialize(args);

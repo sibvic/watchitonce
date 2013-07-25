@@ -59,7 +59,7 @@ namespace WatchItOnce
                 {
                     foreach (string file in Directory.GetFiles((string)path, extension))
                     {
-                        if (!mFilter.IsPassing(file))
+                        if (mFilter != null && !mFilter.IsPassing(file))
                             continue;
                         long position = getPosition(file);
                         mFiles.Add(new MediaFile(file, position));

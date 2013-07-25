@@ -25,7 +25,8 @@ namespace WatchItOnce
             mFiles = files;
             InitializeComponent();
 
-            mPlayerFactory = new MediaPlayerFactory();
+            var playerPath = System.Windows.Forms.Application.StartupPath;
+            mPlayerFactory = new MediaPlayerFactory(playerPath);
             mPlayer = mPlayerFactory.CreatePlayer<IVideoPlayer>();
 
             mPlayer.Events.MediaEnded += new EventHandler(Events_MediaEnded);
@@ -41,7 +42,6 @@ namespace WatchItOnce
         public event OnMediaSkippedDelegate OnMediaSkipped;
 
         IMediaFileIterator mFiles;
-        MediaFile mCurrentFile;
 
         IMediaPlayerFactory mPlayerFactory;
         IVideoPlayer mPlayer;
@@ -94,13 +94,13 @@ namespace WatchItOnce
             MediaFile next = mFiles.GetNextFile();
             if (next == null)
                 return false;
-            if (mCurrentFile != null && OnMediaSkipped != null)
-                OnMediaSkipped(mCurrentFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
+            if (mPlayingFile != null && OnMediaSkipped != null)
+                OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
 
             this.BeginInvoke(new Action(delegate
             {
                 int vol = mPlayer.Volume;
-                Open(mCurrentFile);
+                Open(next);
                 mPlayer.Play();
                 mPlayer.Volume = vol;
             }));
@@ -171,7 +171,7 @@ namespace WatchItOnce
                     if (System.Windows.Forms.MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                         break;
                     if (OnMediaEnded != null)
-                        OnMediaEnded(mCurrentFile);
+                        OnMediaEnded(mPlayingFile);
                     playNextVideo();
                     break;
                 case Keys.D0:
@@ -276,7 +276,7 @@ namespace WatchItOnce
         void Events_MediaEnded(object sender, EventArgs e)
         {
             if (OnMediaEnded != null)
-                OnMediaEnded(mCurrentFile);
+                OnMediaEnded(mPlayingFile);
             if (!playNextVideo())
                 mStatus = Status.Stopped;
         }
@@ -289,7 +289,7 @@ namespace WatchItOnce
         private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (OnMediaSkipped != null)
-                OnMediaSkipped(mCurrentFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
+                OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
         }
     }
 }
