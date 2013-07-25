@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{57F08087-B175-4C96-BE36-83FBC4A21065}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LibVlcWrapper</RootNamespace>
+    <AssemblyName>LibVlcWrapper</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd_party\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Declarations\BitmapFormat.cs" />
+    <Compile Include="Declarations\Delegates.cs" />
+    <Compile Include="Declarations\Enums\AspectRatioMode.cs" />
+    <Compile Include="Declarations\Enums\AudioChannelType.cs" />
+    <Compile Include="Declarations\Enums\ChromaType.cs" />
+    <Compile Include="Declarations\Enums\DeinterlaceMode.cs" />
+    <Compile Include="Declarations\Enums\MediaState.cs" />
+    <Compile Include="Declarations\Enums\MetaDataType.cs" />
+    <Compile Include="Declarations\Enums\PlaybackMode.cs" />
+    <Compile Include="Declarations\Enums\Position.cs" />
+    <Compile Include="Declarations\Enums\TrackType.cs" />
+    <Compile Include="Declarations\Enums\VlcColor.cs" />
+    <Compile Include="Declarations\Events\EventTypes.cs" />
+    <Compile Include="Declarations\Events\IEventBroker.cs" />
+    <Compile Include="Declarations\Events\IEventProvider.cs" />
+    <Compile Include="Declarations\Events\IMediaEvents.cs" />
+    <Compile Include="Declarations\Events\IMediaListEvents.cs" />
+    <Compile Include="Declarations\Events\IMediaListPlayerEvents.cs" />
+    <Compile Include="Declarations\Events\MediaListEvents.cs" />
+    <Compile Include="Declarations\Filters\IAdjustFilter.cs" />
+    <Compile Include="Declarations\Filters\ICropFilter.cs" />
+    <Compile Include="Declarations\Filters\IDeinterlaceFilter.cs" />
+    <Compile Include="Declarations\Filters\ILogoFilter.cs" />
+    <Compile Include="Declarations\Filters\IMarqueeFilter.cs" />
+    <Compile Include="Declarations\IMediaPlayerFactory.cs" />
+    <Compile Include="Declarations\IMemoryRenderer.cs" />
+    <Compile Include="Declarations\Internal\ILogger.cs" />
+    <Compile Include="Declarations\Internal\INativePointer.cs" />
+    <Compile Include="Declarations\Internal\IReferenceCount.cs" />
+    <Compile Include="Declarations\MediaStatistics.cs" />
+    <Compile Include="Declarations\MediaStrings.cs" />
+    <Compile Include="Declarations\MediaTrackInfo.cs" />
+    <Compile Include="Declarations\Media\IMedia.cs" />
+    <Compile Include="Declarations\Media\IMediaFromFile.cs" />
+    <Compile Include="Declarations\Media\IMediaList.cs" />
+    <Compile Include="Declarations\Media\IScreenCaptureMedia.cs" />
+    <Compile Include="Declarations\Media\IVideoInputMedia.cs" />
+    <Compile Include="Declarations\Players\IAudioPlayer.cs" />
+    <Compile Include="Declarations\Players\IDiskPlayer.cs" />
+    <Compile Include="Declarations\Players\IMediaListPlayer.cs" />
+    <Compile Include="Declarations\Players\IPlayer.cs" />
+    <Compile Include="Declarations\Players\IVideoPlayer.cs" />
+    <Compile Include="Implementation\Delagates.cs" />
+    <Compile Include="Implementation\DisposableBase.cs" />
+    <Compile Include="Implementation\Events\EventBroker.cs" />
+    <Compile Include="Implementation\Events\EventManager.cs" />
+    <Compile Include="Implementation\Events\MediaEventManager.cs" />
+    <Compile Include="Implementation\Events\MediaListEventManager.cs" />
+    <Compile Include="Implementation\Events\MediaListPlayerEventManager.cs" />
+    <Compile Include="Implementation\Exceptions\LibVlcException.cs" />
+    <Compile Include="Implementation\Exceptions\LibVlcInitException.cs" />
+    <Compile Include="Implementation\Exceptions\LibVlcNotFoundException.cs" />
+    <Compile Include="Implementation\Extensions.cs" />
+    <Compile Include="Implementation\Filters\AdjustFilter.cs" />
+    <Compile Include="Implementation\Filters\CropFilter.cs" />
+    <Compile Include="Implementation\Filters\DeinterlaceFilter.cs" />
+    <Compile Include="Implementation\Filters\LogoFilter.cs" />
+    <Compile Include="Implementation\Filters\MarqueeFilter.cs" />
+    <Compile Include="Implementation\Log.cs" />
+    <Compile Include="Implementation\MediaPlayerFactory.cs" />
+    <Compile Include="Implementation\Media\Media.cs" />
+    <Compile Include="Implementation\Media\MediaFromFile.cs" />
+    <Compile Include="Implementation\Media\MediaList.cs" />
+    <Compile Include="Implementation\Media\ScreenCaptureMedia.cs" />
+    <Compile Include="Implementation\Media\VideoInputMedia.cs" />
+    <Compile Include="Implementation\MemoryRenderer.cs" />
+    <Compile Include="Implementation\NLogger.cs" />
+    <Compile Include="Implementation\PixelData.cs" />
+    <Compile Include="Implementation\Players\AudioPlayer.cs" />
+    <Compile Include="Implementation\Players\BasicPlayer.cs" />
+    <Compile Include="Implementation\Players\DiskPlayer.cs" />
+    <Compile Include="Implementation\Players\MediaListPlayer.cs" />
+    <Compile Include="Implementation\Players\VideoPlayer.cs" />
+    <Compile Include="Implementation\ReferenceCountAction.cs" />
+    <Compile Include="Implementation\Utils\EnumUtils.cs" />
+    <Compile Include="Implementation\Utils\MemoryHeap.cs" />
+    <Compile Include="LibVlcEnums.cs" />
+    <Compile Include="LibVlcMethods.cs" />
+    <Compile Include="LibVlcStructs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
