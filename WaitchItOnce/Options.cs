@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using WatchItOnce.FileFilter;
+
 namespace WatchItOnce
 {
     public class StringIterator
@@ -65,7 +67,7 @@ namespace WatchItOnce
                         current = strings.GetNext();
                         if (current == null)
                             throw new ArgumentException("--filter should be followed by filter string");
-                        Filter = current;
+                        Filter = new SimpleMatchFilter(current);
                         break;
                     case "--delete":
                         DeleteAfterWatch = true;
@@ -80,7 +82,7 @@ namespace WatchItOnce
             }
         }
 
-        public string Filter { get; private set; }
+        public IFileFilter Filter { get; private set; }
         public bool DeleteAfterWatch { get; private set; }
         public bool RandomOrder { get; private set; }
     }

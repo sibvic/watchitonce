@@ -8,8 +8,8 @@
     <ProjectGuid>{519B1B35-A242-43A8-9B48-BFD7DE9D038A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WaitchItOnce</RootNamespace>
-    <AssemblyName>WaitchItOnce</AssemblyName>
+    <RootNamespace>WatchItOnce</RootNamespace>
+    <AssemblyName>WatchItOnce</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IFileFilter.cs" />
     <Compile Include="IMediaFileIterator.cs" />
+    <Compile Include="FileFilter\SimpleMatchFilter.cs" />
     <Compile Include="MediaFileIterator\OrderedIterator.cs" />
     <Compile Include="MediaFileIterator\RandomIterator.cs" />
     <Compile Include="PlayerWindow.cs">
@@ -91,6 +93,7 @@
       <Name>LibVlcWrapper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

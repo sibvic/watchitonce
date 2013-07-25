@@ -27,6 +27,12 @@ namespace WatchItOnce
 {
     class MediaFileScanner
     {
+        MediaFileScanner(IFileFilter filter)
+        {
+            mFilter = filter;
+        }
+        IFileFilter mFilter;
+
         long getPosition(string path)
         {
             string infoPath = path + ".info";
@@ -53,6 +59,8 @@ namespace WatchItOnce
                 {
                     foreach (string file in Directory.GetFiles((string)path, extension))
                     {
+                        if (!mFilter.IsPassing(file))
+                            continue;
                         long position = getPosition(file);
                         mFiles.Add(new MediaFile(file, position));
                     }
@@ -65,9 +73,9 @@ namespace WatchItOnce
 
         List<MediaFile> mFiles = new List<MediaFile>();
 
-        public static MediaFile[] GetFromFolder(string path)
+        public static MediaFile[] GetFromFolder(string path, IFileFilter filter)
         {
-            MediaFileScanner scaner = new MediaFileScanner();
+            MediaFileScanner scaner = new MediaFileScanner(filter);
             scaner.scannFolder(path);
             return scaner.mFiles.ToArray();
         }

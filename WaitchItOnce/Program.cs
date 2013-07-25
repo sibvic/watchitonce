@@ -51,7 +51,7 @@ namespace WatchItOnce
                 return;
             }
 
-            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory());
+            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), options.Filter);
             if (files.Length == 0)
                 return;
 
