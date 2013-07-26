@@ -284,7 +284,10 @@ namespace WatchItOnce
             if (mMedia != null)
                 mMedia.Dispose();
             if (OnMediaEnded != null)
+            {
                 OnMediaEnded(mPlayingFile);
+                mPlayingFile = null;
+            }
             if (!playNextVideo())
                 mStatus = Status.Stopped;
         }
