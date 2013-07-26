@@ -48,6 +48,8 @@ namespace WatchItOnce
         IMedia mMedia;
         int mLastWidth;
         int mLastHeight;
+        int mLastTop;
+        int mLastLeft;
         MediaFile mPlayingFile;
 
         enum Status
@@ -59,9 +61,12 @@ namespace WatchItOnce
 
         private void EnterFullscreen()
         {
-            WindowState = FormWindowState.Maximized;
             mLastWidth = Width;
             mLastHeight = Height;
+            mLastTop = Top;
+            mLastLeft = Left;
+            WindowState = FormWindowState.Maximized;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Top = 0;
             Left = 0;
             var screen = Screen.FromHandle(Handle);
@@ -72,8 +77,11 @@ namespace WatchItOnce
         private void EscapeFullscreen()
         {
             WindowState = FormWindowState.Normal;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             Width = mLastWidth;
             Height = mLastHeight;
+            Top = mLastTop;
+            Left = mLastLeft;
         }
 
         void Open(MediaFile file)
@@ -177,7 +185,10 @@ namespace WatchItOnce
                     if (mMedia != null)
                         mMedia.Dispose();
                     if (OnMediaEnded != null)
+                    {
                         OnMediaEnded(mPlayingFile);
+                        mPlayingFile = null;
+                    }
                     playNextVideo();
                     break;
                 case Keys.D0:
