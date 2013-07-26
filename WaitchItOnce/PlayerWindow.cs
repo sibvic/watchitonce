@@ -93,7 +93,10 @@ namespace WatchItOnce
         {
             MediaFile next = mFiles.GetNextFile();
             if (next == null)
+            {
+                mPlayingFile = null;
                 return false;
+            }
             if (mPlayingFile != null && OnMediaSkipped != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
 
@@ -170,6 +173,9 @@ namespace WatchItOnce
                 case Keys.M:
                     if (System.Windows.Forms.MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                         break;
+                    mPlayer.Stop();
+                    if (mMedia != null)
+                        mMedia.Dispose();
                     if (OnMediaEnded != null)
                         OnMediaEnded(mPlayingFile);
                     playNextVideo();
@@ -275,6 +281,8 @@ namespace WatchItOnce
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
+            if (mMedia != null)
+                mMedia.Dispose();
             if (OnMediaEnded != null)
                 OnMediaEnded(mPlayingFile);
             if (!playNextVideo())
@@ -288,7 +296,7 @@ namespace WatchItOnce
 
         private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (OnMediaSkipped != null)
+            if (OnMediaSkipped != null && mPlayingFile != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
         }
     }

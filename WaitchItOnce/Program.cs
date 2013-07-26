@@ -42,18 +42,21 @@ namespace WatchItOnce
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine(ex.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
                 return;
             }
             catch (NotSupportedException ex)
             {
-                Console.WriteLine(ex.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
                 return;
             }
 
             MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), options.Filter);
             if (files.Length == 0)
+            {
+                System.Windows.Forms.MessageBox.Show("No files to play");
                 return;
+            }
 
             IMediaFileIterator mediaFiles;
             if (options.RandomOrder)
