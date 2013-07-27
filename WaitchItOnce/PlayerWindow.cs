@@ -183,7 +183,10 @@ namespace WatchItOnce
                         break;
                     mPlayer.Stop();
                     if (mMedia != null)
+                    {
+                        mPlayer.Stop();
                         mMedia.Dispose();
+                    }
                     if (OnMediaEnded != null)
                     {
                         OnMediaEnded(mPlayingFile);
@@ -229,7 +232,7 @@ namespace WatchItOnce
                     if (mStatus == Status.Playing)
                     {
                         mStatus = Status.Stopped;
-                        mPlayer.Stop();
+                        mPlayer.Pause();
                     }
                     else
                     {
@@ -293,7 +296,10 @@ namespace WatchItOnce
         void Events_MediaEnded(object sender, EventArgs e)
         {
             if (mMedia != null)
+            {
+                mPlayer.Stop();
                 mMedia.Dispose();
+            }
             if (OnMediaEnded != null)
             {
                 OnMediaEnded(mPlayingFile);
