@@ -65,13 +65,8 @@ namespace WatchItOnce
             mLastHeight = Height;
             mLastTop = Top;
             mLastLeft = Left;
-            WindowState = FormWindowState.Maximized;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            Top = 0;
-            Left = 0;
-            var screen = Screen.FromHandle(Handle);
-            Width = screen.Bounds.Width;
-            Height = screen.Bounds.Height;
+            WindowState = FormWindowState.Maximized;
         }
 
         private void EscapeFullscreen()
