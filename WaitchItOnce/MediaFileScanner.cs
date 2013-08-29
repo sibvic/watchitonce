@@ -54,7 +54,7 @@ namespace WatchItOnce
                 {
                     scannFolder(folder);
                 }
-                string[] extensions = new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm" };
+                string[] extensions = new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob" };
                 foreach (string extension in extensions)
                 {
                     foreach (string file in Directory.GetFiles((string)path, extension))

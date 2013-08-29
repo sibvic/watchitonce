@@ -28,6 +28,7 @@ namespace WatchItOnce
             var playerPath = System.Windows.Forms.Application.StartupPath;
             mPlayerFactory = new MediaPlayerFactory(playerPath);
             mPlayer = mPlayerFactory.CreatePlayer<IVideoPlayer>();
+            mPlayerController = new PlayerController(mPlayer, mPlayerFactory);
 
             mPlayer.Events.MediaEnded += new EventHandler(Events_MediaEnded);
             mPlayer.Events.PlayerStopped += new EventHandler(Events_PlayerStopped);
@@ -45,19 +46,12 @@ namespace WatchItOnce
 
         IMediaPlayerFactory mPlayerFactory;
         IVideoPlayer mPlayer;
-        IMedia mMedia;
+        PlayerController mPlayerController;
         int mLastWidth;
         int mLastHeight;
         int mLastTop;
         int mLastLeft;
         MediaFile mPlayingFile;
-
-        enum Status
-        {
-            Playing,
-            Stopped
-        }
-        Status mStatus = Status.Stopped;
 
         private void EnterFullscreen()
         {
@@ -84,11 +78,7 @@ namespace WatchItOnce
             mPlayingFile = file;
 
             string fullFileName = mPlayingFile.Path;
-            mMedia = mPlayerFactory.CreateMedia<IMedia>(fullFileName, new string[] { });
-            mMedia.Events.StateChanged += new EventHandler<MediaStateChange>(Events_StateChanged);
-
-            mPlayer.Open(mMedia);
-            mMedia.Parse(true);
+            mPlayerController.Open(fullFileName);
             Text = System.IO.Path.GetFileNameWithoutExtension(fullFileName);
         }
 
@@ -107,7 +97,8 @@ namespace WatchItOnce
             {
                 int vol = mPlayer.Volume;
                 Open(next);
-                mPlayer.Play();
+                mPlayerController.Play();
+                mPlayerController.Seek(next.PositionSeconds * 1000);
                 mPlayer.Volume = vol;
             }));
             return true;
@@ -167,21 +158,21 @@ namespace WatchItOnce
                         EnterFullscreen();
                     break;
                 case Keys.B:
+                    if (mPlayerController.IsPlaying)
+                    {
+                        mPlayerController.Pause();
+                        EscapeFullscreen();
+                    }
                     e.Handled = true;
                     break;
                 case Keys.N:
                     if (!playNextVideo())
-                        mPlayer.Pause();
+                        mPlayerController.Pause();
                     break;
                 case Keys.M:
                     if (System.Windows.Forms.MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                         break;
-                    mPlayer.Stop();
-                    if (mMedia != null)
-                    {
-                        mPlayer.Stop();
-                        mMedia.Dispose();
-                    }
+                    mPlayerController.Stop();
                     if (OnMediaEnded != null)
                     {
                         OnMediaEnded(mPlayingFile);
@@ -224,16 +215,10 @@ namespace WatchItOnce
                         EscapeFullscreen();
                     break;
                 case Keys.Space:
-                    if (mStatus == Status.Playing)
-                    {
-                        mStatus = Status.Stopped;
-                        mPlayer.Pause();
-                    }
+                    if (mPlayerController.IsPlaying)
+                        mPlayerController.Pause();
                     else
-                    {
-                        mStatus = Status.Playing;
-                        mPlayer.Play();
-                    }
+                        mPlayerController.Play();
                     break;
                 case Keys.Left:
                     {
@@ -290,18 +275,14 @@ namespace WatchItOnce
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
-            if (mMedia != null)
-            {
-                mPlayer.Stop();
-                mMedia.Dispose();
-            }
+            mPlayerController.Stop();
             if (OnMediaEnded != null)
             {
                 OnMediaEnded(mPlayingFile);
                 mPlayingFile = null;
             }
             if (!playNextVideo())
-                mStatus = Status.Stopped;
+                mPlayerController.Pause();
         }
 
         private void PlayerWindow_Load(object sender, EventArgs e)

@@ -78,6 +78,10 @@ namespace WatchItOnce
             string infoPath = file.Path + ".info";
             if (System.IO.File.Exists(infoPath))
                 System.IO.File.Delete(infoPath);
+
+            System.IO.FileAttributes attrs = System.IO.File.GetAttributes(file.Path);
+            if (attrs.HasFlag(System.IO.FileAttributes.ReadOnly))
+                System.IO.File.SetAttributes(file.Path, System.IO.FileAttributes.Normal);
             System.IO.File.Delete(file.Path);
         }
 

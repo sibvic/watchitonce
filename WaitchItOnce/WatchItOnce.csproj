@@ -52,6 +52,7 @@
     <Compile Include="FileFilter\SimpleMatchFilter.cs" />
     <Compile Include="MediaFileIterator\OrderedIterator.cs" />
     <Compile Include="MediaFileIterator\RandomIterator.cs" />
+    <Compile Include="PlayerController.cs" />
     <Compile Include="PlayerWindow.cs">
       <SubType>Form</SubType>
     </Compile>
