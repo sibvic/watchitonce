@@ -78,6 +78,8 @@ namespace WatchItOnce
             mPlayingFile = file;
 
             string fullFileName = mPlayingFile.Path;
+            if (mPlayerController.IsPlaying)
+                mPlayerController.Stop();
             mPlayerController.Open(fullFileName);
             Text = System.IO.Path.GetFileNameWithoutExtension(fullFileName);
         }
