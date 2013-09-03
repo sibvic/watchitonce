@@ -51,7 +51,8 @@ namespace WatchItOnce
                 return;
             }
 
-            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), options.Filter);
+            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), options.Filter,
+                options.Extensions.ToArray());
             if (files.Length == 0)
             {
                 System.Windows.Forms.MessageBox.Show("No files to play");

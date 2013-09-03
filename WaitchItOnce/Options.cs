@@ -56,6 +56,7 @@ namespace WatchItOnce
         {
             DeleteAfterWatch = false;
             RandomOrder = false;
+            Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob" });
 
             StringIterator strings = new StringIterator(args);
             string current = strings.GetNext();
@@ -81,6 +82,13 @@ namespace WatchItOnce
                     case "--random":
                         RandomOrder = true;
                         break;
+                    case "--extensions":
+                        current = strings.GetNext();
+                        if (current == null)
+                            throw new ArgumentException("--extensions should be followed by list of extension separated by ;");
+                        string[] extensions = current.Split(new char[] {';'});
+                        Extensions = new List<string>(extensions);
+                        break;
                     default:
                         throw new NotSupportedException("Unknown argument:" + current);
                 }
@@ -91,5 +99,6 @@ namespace WatchItOnce
         public IFileFilter Filter { get; private set; }
         public bool DeleteAfterWatch { get; private set; }
         public bool RandomOrder { get; private set; }
+        public List<string> Extensions { get; private set; }
     }
 }

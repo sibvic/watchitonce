@@ -27,11 +27,13 @@ namespace WatchItOnce
 {
     class MediaFileScanner
     {
-        MediaFileScanner(IFileFilter filter)
+        MediaFileScanner(IFileFilter filter, string[] extensions)
         {
             mFilter = filter;
+            mExtensions = extensions;
         }
         IFileFilter mFilter;
+        string[] mExtensions;
 
         long getPosition(string path)
         {
@@ -54,8 +56,7 @@ namespace WatchItOnce
                 {
                     scannFolder(folder);
                 }
-                string[] extensions = new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob" };
-                foreach (string extension in extensions)
+                foreach (string extension in mExtensions)
                 {
                     foreach (string file in Directory.GetFiles((string)path, extension))
                     {
@@ -73,9 +74,9 @@ namespace WatchItOnce
 
         List<MediaFile> mFiles = new List<MediaFile>();
 
-        public static MediaFile[] GetFromFolder(string path, IFileFilter filter)
+        public static MediaFile[] GetFromFolder(string path, IFileFilter filter, string[] extensions)
         {
-            MediaFileScanner scaner = new MediaFileScanner(filter);
+            MediaFileScanner scaner = new MediaFileScanner(filter, extensions);
             scaner.scannFolder(path);
             return scaner.mFiles.ToArray();
         }
