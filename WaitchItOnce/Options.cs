@@ -69,6 +69,12 @@ namespace WatchItOnce
                             throw new ArgumentException("--filter should be followed by filter string");
                         Filter = new SimpleMatchFilter(current);
                         break;
+                    case "--rfilter":
+                        current = strings.GetNext();
+                        if (current == null)
+                            throw new ArgumentException("--rfilter should be followed by filter string");
+                        Filter = new RegexpMatchFilter(current);
+                        break;
                     case "--delete":
                         DeleteAfterWatch = true;
                         break;
