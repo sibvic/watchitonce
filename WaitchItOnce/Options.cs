@@ -50,10 +50,31 @@ namespace WatchItOnce
         }
     }
 
-    public class Options
+    public partial class Options
     {
+        public Options()
+        {
+            mOptions.Add(new AutoNextOptionController(this));
+        }
+        List<IOptionController> mOptions = new List<IOptionController>();
+
+        bool parseOption(string optionName, StringIterator strings)
+        {
+            foreach (IOptionController option in mOptions)
+            {
+                if (option.Parse(optionName, strings))
+                    return true;
+            }
+            return false;
+        }
+
         public void Load(string[] args)
         {
+            foreach (IOptionController option in mOptions)
+            {
+                option.ResetToDefault();
+            }
+
             DeleteAfterWatch = false;
             RandomOrder = false;
             Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob" });
@@ -62,35 +83,38 @@ namespace WatchItOnce
             string current = strings.GetNext();
             while (current != null)
             {
-                switch (current)
+                if (!parseOption(current, strings))
                 {
-                    case "--filter":
-                        current = strings.GetNext();
-                        if (current == null)
-                            throw new ArgumentException("--filter should be followed by filter string");
-                        Filter = new SimpleMatchFilter(current);
-                        break;
-                    case "--rfilter":
-                        current = strings.GetNext();
-                        if (current == null)
-                            throw new ArgumentException("--rfilter should be followed by filter string");
-                        Filter = new RegexpMatchFilter(current);
-                        break;
-                    case "--delete":
-                        DeleteAfterWatch = true;
-                        break;
-                    case "--random":
-                        RandomOrder = true;
-                        break;
-                    case "--extensions":
-                        current = strings.GetNext();
-                        if (current == null)
-                            throw new ArgumentException("--extensions should be followed by list of extension separated by ;");
-                        string[] extensions = current.Split(new char[] {';'});
-                        Extensions = new List<string>(extensions);
-                        break;
-                    default:
-                        throw new NotSupportedException("Unknown argument:" + current);
+                    switch (current)
+                    {
+                        case "--filter":
+                            current = strings.GetNext();
+                            if (current == null)
+                                throw new ArgumentException("--filter should be followed by filter string");
+                            Filter = new SimpleMatchFilter(current);
+                            break;
+                        case "--rfilter":
+                            current = strings.GetNext();
+                            if (current == null)
+                                throw new ArgumentException("--rfilter should be followed by filter string");
+                            Filter = new RegexpMatchFilter(current);
+                            break;
+                        case "--delete":
+                            DeleteAfterWatch = true;
+                            break;
+                        case "--random":
+                            RandomOrder = true;
+                            break;
+                        case "--extensions":
+                            current = strings.GetNext();
+                            if (current == null)
+                                throw new ArgumentException("--extensions should be followed by list of extension separated by ;");
+                            string[] extensions = current.Split(new char[] { ';' });
+                            Extensions = new List<string>(extensions);
+                            break;
+                        default:
+                            throw new NotSupportedException("Unknown argument:" + current);
+                    }
                 }
                 current = strings.GetNext();
             }
@@ -100,5 +124,6 @@ namespace WatchItOnce
         public bool DeleteAfterWatch { get; private set; }
         public bool RandomOrder { get; private set; }
         public List<string> Extensions { get; private set; }
+        public int? AutoNext { get; internal set; }
     }
 }

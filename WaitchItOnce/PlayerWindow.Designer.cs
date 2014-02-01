@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 264);
             this.Name = "PlayerWindow";
-            this.Text = "Form1";
+            this.Text = "Watch It Once";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerWindow_FormClosing);
             this.Load += new System.EventHandler(this.PlayerWindow_Load);
             this.ResumeLayout(false);

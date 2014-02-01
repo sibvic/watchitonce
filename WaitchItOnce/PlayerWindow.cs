@@ -20,8 +20,9 @@ namespace WatchItOnce
 
     public partial class PlayerWindow : Form
     {
-        public PlayerWindow(IMediaFileIterator files)
+        public PlayerWindow(IMediaFileIterator files, PlayerOptions options)
         {
+            mOptions = options;
             mFiles = files;
             InitializeComponent();
 
@@ -32,6 +33,8 @@ namespace WatchItOnce
 
             mPlayer.Events.MediaEnded += new EventHandler(Events_MediaEnded);
             mPlayer.Events.PlayerStopped += new EventHandler(Events_PlayerStopped);
+            mPlayer.Events.PlayerPaused += new EventHandler(Events_PlayerPaused);
+            mPlayer.Events.PlayerPlaying += new EventHandler(Events_PlayerPlaying);
 
             mPlayer.WindowHandle = Handle;
             mPlayer.KeyInputEnabled = false;
@@ -42,6 +45,7 @@ namespace WatchItOnce
         public event OnMediaEndedDelegate OnMediaEnded;
         public event OnMediaSkippedDelegate OnMediaSkipped;
 
+        PlayerOptions mOptions;
         IMediaFileIterator mFiles;
 
         IMediaPlayerFactory mPlayerFactory;
@@ -52,6 +56,7 @@ namespace WatchItOnce
         int mLastTop;
         int mLastLeft;
         MediaFile mPlayingFile;
+        System.Timers.Timer mTimer;
 
         private void EnterFullscreen()
         {
@@ -253,30 +258,46 @@ namespace WatchItOnce
             }
         }
 
-        void Events_StateChanged(object sender, MediaStateChange e)
+        void Events_PlayerStopped(object sender, EventArgs e)
         {
-            switch (e.NewState)
+            deleteTimer();
+        }
+
+        void Events_PlayerPlaying(object sender, EventArgs e)
+        {
+            deleteTimer();
+            if (mOptions.AutoNext != null)
             {
-                case MediaState.NothingSpecial:
-                case MediaState.Buffering:
-                    // do nothing
-                    break;
-                case MediaState.Opening:
-                    mPlayer.Time = (long)Math.Round(mPlayingFile.PositionSeconds * 1000.0);
-                    break;
+                mTimer = new System.Timers.Timer();
+                mTimer.Interval = mOptions.AutoNext.Value * 1000;
+                mTimer.Elapsed += new System.Timers.ElapsedEventHandler(mTimer_Elapsed);
+                mTimer.Start();
             }
         }
 
-        void Events_PlayerStopped(object sender, EventArgs e)
+        void mTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            this.BeginInvoke(new Action(delegate
+            playNextVideo();
+        }
+
+        void Events_PlayerPaused(object sender, EventArgs e)
+        {
+            deleteTimer();
+        }
+
+        private void deleteTimer()
+        {
+            if (mTimer != null)
             {
-                
-            }));
+                mTimer.Stop();
+                mTimer.Dispose();
+                mTimer = null;
+            }
         }
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
+            deleteTimer();
             mPlayerController.Stop();
             if (OnMediaEnded != null)
             {
