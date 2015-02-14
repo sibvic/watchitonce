@@ -12,13 +12,13 @@ namespace WatchItOnce
 {
     class PlayerController
     {
-        public PlayerController(IVideoPlayer player, IMediaPlayerFactory playerFactory)
+        public PlayerController(IDiskPlayer player, IMediaPlayerFactory playerFactory)
         {
             mPlayer = player;
             mPlayerFactory = playerFactory;
         }
 
-        IVideoPlayer mPlayer;
+        IDiskPlayer mPlayer;
         IMediaPlayerFactory mPlayerFactory;
         IMedia mMedia;
 
@@ -65,6 +65,54 @@ namespace WatchItOnce
 
             IsPlaying = true;
             mPlayer.Play();
+        }
+
+        /// <summary>
+        /// Switches deinterlacing mode in a loop.
+        /// No deinterlacing
+        /// Yadiff 2x
+        /// Yadiff
+        /// </summary>
+        public void SwitchDeinterlacing()
+        {
+            if (mPlayer.Deinterlace.Enabled)
+            {
+                if (mPlayer.Deinterlace.Mode == DeinterlaceMode.yadif2x)
+                    mPlayer.Deinterlace.Mode = DeinterlaceMode.yadif;
+                else
+                {
+                    mPlayer.Deinterlace.Enabled = false;
+                    mPlayer.Deinterlace.Mode = DeinterlaceMode.yadif2x;
+                }
+            }
+            else
+            {
+                mPlayer.Deinterlace.Enabled = true;
+                mPlayer.Deinterlace.Mode = DeinterlaceMode.yadif2x;
+            }
+        }
+
+        /// <summary>
+        /// Switches audio track in a loop
+        /// </summary>
+        public void SwitchAudioTrack()
+        {
+            int audioTracksCount = mPlayer.AudioTrackCount;
+            if (audioTracksCount == 1)
+                return;
+
+            int currentAudioTrack = mPlayer.AudioTrack;
+            int nextAudioTrack = mPlayer.AudioTrack + 1;
+            if (nextAudioTrack > audioTracksCount)
+                mPlayer.AudioTrack = 1;
+            else
+            {
+                mPlayer.AudioTrack = nextAudioTrack;
+                //HACK: RESOLVE LATER: sometime AudioTrackCount returns more tracks than it is actually is
+                if (mPlayer.AudioTrack == currentAudioTrack)
+                    mPlayer.AudioTrack = 1;
+            }
+            
         }
     }
 }

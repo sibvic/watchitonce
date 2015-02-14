@@ -28,7 +28,7 @@ namespace WatchItOnce
 
             var playerPath = System.Windows.Forms.Application.StartupPath;
             mPlayerFactory = new MediaPlayerFactory(playerPath);
-            mPlayer = mPlayerFactory.CreatePlayer<IVideoPlayer>();
+            mPlayer = mPlayerFactory.CreatePlayer<IDiskPlayer>();
             mPlayerController = new PlayerController(mPlayer, mPlayerFactory);
 
             mPlayer.Events.MediaEnded += new EventHandler(Events_MediaEnded);
@@ -49,7 +49,7 @@ namespace WatchItOnce
         IMediaFileIterator mFiles;
 
         IMediaPlayerFactory mPlayerFactory;
-        IVideoPlayer mPlayer;
+        IDiskPlayer mPlayer;
         PlayerController mPlayerController;
         int mLastWidth;
         int mLastHeight;
@@ -158,6 +158,13 @@ namespace WatchItOnce
         {
             switch (e.KeyCode)
             {
+                case Keys.A:
+                    //TODO: test
+                    mPlayerController.SwitchDeinterlacing();
+                    break;
+                case Keys.S:
+                    mPlayerController.SwitchAudioTrack();
+                    break;
                 case Keys.Enter:
                     if (WindowState == FormWindowState.Maximized)
                         EscapeFullscreen();
