@@ -12,7 +12,7 @@ namespace WatchItOnce.MediaFileIterator
         public RandomIterator(MediaFile[] files)
         {
             List<MediaFile> filesToRandomize = new List<MediaFile>(files);
-            Random rnd = new Random(files.Length);
+            Random rnd = new Random(files.Length + DateTime.Now.Second);
             while (filesToRandomize.Count > 0)
             {
                 int next = rnd.Next(filesToRandomize.Count);
