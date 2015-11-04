@@ -42,12 +42,12 @@ namespace WatchItOnce
             }
             catch (ArgumentException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
             catch (NotSupportedException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace WatchItOnce
                 options.Extensions.ToArray());
             if (files.Length == 0)
             {
-                System.Windows.Forms.MessageBox.Show("No files to play");
+                MessageBox.Show("No files to play");
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace WatchItOnce
                     mediaFiles = new RandomIterator(files);
                     break;
                 case SortOrder.ByName:
-                    mediaFiles = new RandomIterator(files);
+                    mediaFiles = new SoredByNameIterator(files);
                     break;
             }
 

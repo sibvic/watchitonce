@@ -93,7 +93,7 @@ namespace WatchItOnce
 
         private bool playNextVideo()
         {
-            if (mFilesIterator.MoveNext())
+            if (!mFilesIterator.MoveNext())
             {
                 mPlayingFile = null;
                 return false;
