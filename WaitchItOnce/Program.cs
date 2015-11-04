@@ -59,11 +59,7 @@ namespace WatchItOnce
                 return;
             }
 
-            IMediaFileIterator mediaFiles;
-            if (options.RandomOrder)
-                mediaFiles = new RandomIterator(files);
-            else
-                mediaFiles = new OrderedIterator(files);
+            IMediaFileIterator mediaFiles = createIterator(options, files);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -73,6 +69,26 @@ namespace WatchItOnce
             if (options.DeleteAfterWatch)
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(playerWindow_OnMediaEnded);
             Application.Run(playerWindow);
+        }
+
+        private static IMediaFileIterator createIterator(Options options, MediaFile[] files)
+        {
+            IMediaFileIterator mediaFiles;
+            switch (options.SortOrder)
+            {
+                default:
+                case SortOrder.Default:
+                    mediaFiles = new OrderedIterator(files);
+                    break;
+                case SortOrder.Random:
+                    mediaFiles = new RandomIterator(files);
+                    break;
+                case SortOrder.ByName:
+                    mediaFiles = new RandomIterator(files);
+                    break;
+            }
+
+            return mediaFiles;
         }
 
         static void playerWindow_OnMediaEnded(MediaFile file)

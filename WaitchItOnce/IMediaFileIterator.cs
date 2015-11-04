@@ -5,8 +5,7 @@ using System.Text;
 
 namespace WatchItOnce
 {
-    public interface IMediaFileIterator
+    public interface IMediaFileIterator : IEnumerable<MediaFile>
     {
-        MediaFile GetNextFile();
     }
 }

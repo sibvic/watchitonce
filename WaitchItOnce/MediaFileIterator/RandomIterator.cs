@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,18 +21,18 @@ namespace WatchItOnce.MediaFileIterator
                 filesToRandomize.Remove(mediaFile);
                 mFiles.Add(mediaFile);
             }
-            mNextFile = 0;
         }
 
         List<MediaFile> mFiles = new List<MediaFile>();
-        int mNextFile;
 
-        public MediaFile GetNextFile()
+        public IEnumerator<MediaFile> GetEnumerator()
         {
-            if (mNextFile >= mFiles.Count)
-                return null;
+            return mFiles.GetEnumerator();
+        }
 
-            return mFiles[mNextFile++];
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return mFiles.GetEnumerator();
         }
     }
 }

@@ -76,7 +76,7 @@ namespace WatchItOnce
             }
 
             DeleteAfterWatch = false;
-            RandomOrder = false;
+            SortOrder = SortOrder.Default;
             Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob" });
 
             StringIterator strings = new StringIterator(args);
@@ -103,7 +103,10 @@ namespace WatchItOnce
                             DeleteAfterWatch = true;
                             break;
                         case "--random":
-                            RandomOrder = true;
+                            SortOrder = SortOrder.Random;
+                            break;
+                        case "--sort-by-name":
+                            SortOrder = SortOrder.ByName;
                             break;
                         case "--extensions":
                             current = strings.GetNext();
@@ -122,7 +125,7 @@ namespace WatchItOnce
 
         public IFileFilter Filter { get; private set; }
         public bool DeleteAfterWatch { get; private set; }
-        public bool RandomOrder { get; private set; }
+        public SortOrder SortOrder { get; private set; }
         public List<string> Extensions { get; private set; }
         public int? AutoNext { get; internal set; }
     }
