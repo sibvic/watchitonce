@@ -77,7 +77,10 @@ namespace WatchItOnce
                     mediaFiles = new OrderedIterator(files);
                     break;
                 case SortOrder.Random:
-                    mediaFiles = new RandomIterator(files);
+                    mediaFiles = new RandomIterator(files, false);
+                    break;
+                case SortOrder.RandomContinue:
+                    mediaFiles = new RandomIterator(files, true);
                     break;
                 case SortOrder.ByName:
                     mediaFiles = new SoredByNameIterator(files);

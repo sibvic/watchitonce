@@ -5,6 +5,7 @@ VLC-based player which remembers last file position and deletes files after watc
 
 Available console keys:
  --sort-by-name	Sort files by name
- --random Soft files randomly
+ --random Sorts files randomly
+ --random-continue Sorts files randomly but preffers to continue already staterd files (watched at least 4 seconds)
  --delete Delete file after playing an item
  --filter str Filter items by searching specified substring in the item name

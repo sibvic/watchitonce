@@ -9,6 +9,7 @@ namespace WatchItOnce
     {
         Default,
         Random,
+        RandomContinue,
         ByName
     }
 }

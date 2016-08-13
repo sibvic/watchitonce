@@ -105,6 +105,9 @@ namespace WatchItOnce
                         case "--random":
                             SortOrder = SortOrder.Random;
                             break;
+                        case "--random-continue":
+                            SortOrder = SortOrder.RandomContinue;
+                            break;
                         case "--sort-by-name":
                             SortOrder = SortOrder.ByName;
                             break;
