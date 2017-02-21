@@ -5,7 +5,11 @@ using System.Text;
 
 namespace WatchItOnce
 {
-    public interface IMediaFileIterator : IEnumerable<MediaFile>
+    public enum SortOrder
     {
+        Default,
+        Random,
+        RandomContinue,
+        ByName
     }
 }

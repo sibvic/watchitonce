@@ -24,11 +24,12 @@ namespace WatchItOnce
         {
             mOptions = options;
             mFiles = files;
+            mFilesIterator = mFiles.GetEnumerator();
             InitializeComponent();
 
-            var playerPath = System.Windows.Forms.Application.StartupPath;
+            var playerPath = Application.StartupPath;
             mPlayerFactory = new MediaPlayerFactory(playerPath);
-            mPlayer = mPlayerFactory.CreatePlayer<IVideoPlayer>();
+            mPlayer = mPlayerFactory.CreatePlayer<IDiskPlayer>();
             mPlayerController = new PlayerController(mPlayer, mPlayerFactory);
 
             mPlayer.Events.MediaEnded += new EventHandler(Events_MediaEnded);
@@ -39,7 +40,7 @@ namespace WatchItOnce
             mPlayer.WindowHandle = Handle;
             mPlayer.KeyInputEnabled = false;
 
-            KeyDown += new System.Windows.Forms.KeyEventHandler(playerWindow_KeyDown);
+            KeyDown += new KeyEventHandler(playerWindow_KeyDown);
         }
 
         public event OnMediaEndedDelegate OnMediaEnded;
@@ -47,9 +48,10 @@ namespace WatchItOnce
 
         PlayerOptions mOptions;
         IMediaFileIterator mFiles;
+        IEnumerator<MediaFile> mFilesIterator;
 
         IMediaPlayerFactory mPlayerFactory;
-        IVideoPlayer mPlayer;
+        IDiskPlayer mPlayer;
         PlayerController mPlayerController;
         int mLastWidth;
         int mLastHeight;
@@ -64,14 +66,14 @@ namespace WatchItOnce
             mLastHeight = Height;
             mLastTop = Top;
             mLastLeft = Left;
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
         }
 
         private void EscapeFullscreen()
         {
             WindowState = FormWindowState.Normal;
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            FormBorderStyle = FormBorderStyle.Sizable;
             Width = mLastWidth;
             Height = mLastHeight;
             Top = mLastTop;
@@ -91,12 +93,12 @@ namespace WatchItOnce
 
         private bool playNextVideo()
         {
-            MediaFile next = mFiles.GetNextFile();
-            if (next == null)
+            if (!mFilesIterator.MoveNext())
             {
                 mPlayingFile = null;
                 return false;
             }
+            MediaFile next = mFilesIterator.Current;
             if (mPlayingFile != null && OnMediaSkipped != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
 
@@ -158,6 +160,13 @@ namespace WatchItOnce
         {
             switch (e.KeyCode)
             {
+                case Keys.A:
+                    //TODO: test
+                    mPlayerController.SwitchDeinterlacing();
+                    break;
+                case Keys.S:
+                    mPlayerController.SwitchAudioTrack();
+                    break;
                 case Keys.Enter:
                     if (WindowState == FormWindowState.Maximized)
                         EscapeFullscreen();

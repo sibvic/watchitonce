@@ -18,11 +18,7 @@
 // ========================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-
-using WatchItOnce;
 using WatchItOnce.MediaFileIterator;
 
 namespace WatchItOnce
@@ -42,12 +38,12 @@ namespace WatchItOnce
             }
             catch (ArgumentException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
             catch (NotSupportedException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
 
@@ -55,15 +51,11 @@ namespace WatchItOnce
                 options.Extensions.ToArray());
             if (files.Length == 0)
             {
-                System.Windows.Forms.MessageBox.Show("No files to play");
+                MessageBox.Show("No files to play");
                 return;
             }
 
-            IMediaFileIterator mediaFiles;
-            if (options.RandomOrder)
-                mediaFiles = new RandomIterator(files);
-            else
-                mediaFiles = new OrderedIterator(files);
+            IMediaFileIterator mediaFiles = createIterator(options, files);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -73,6 +65,29 @@ namespace WatchItOnce
             if (options.DeleteAfterWatch)
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(playerWindow_OnMediaEnded);
             Application.Run(playerWindow);
+        }
+
+        private static IMediaFileIterator createIterator(Options options, MediaFile[] files)
+        {
+            IMediaFileIterator mediaFiles;
+            switch (options.SortOrder)
+            {
+                default:
+                case SortOrder.Default:
+                    mediaFiles = new OrderedIterator(files);
+                    break;
+                case SortOrder.Random:
+                    mediaFiles = new RandomIterator(files, false);
+                    break;
+                case SortOrder.RandomContinue:
+                    mediaFiles = new RandomIterator(files, true);
+                    break;
+                case SortOrder.ByName:
+                    mediaFiles = new SoredByNameIterator(files);
+                    break;
+            }
+
+            return mediaFiles;
         }
 
         static void playerWindow_OnMediaEnded(MediaFile file)

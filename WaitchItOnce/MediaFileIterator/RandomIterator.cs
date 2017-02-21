@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,25 @@ namespace WatchItOnce.MediaFileIterator
 {
     class RandomIterator : IMediaFileIterator
     {
-        public RandomIterator(MediaFile[] files)
+        public RandomIterator(MediaFile[] files, bool continueStartedFirst)
         {
-            List<MediaFile> filesToRandomize = new List<MediaFile>(files);
-            Random rnd = new Random(files.Length);
+            Random rnd = new Random(files.Length + DateTime.Now.Second);
+            if (continueStartedFirst)
+            {
+                List<MediaFile> filesToContinue = new List<MediaFile>(files.Where(f => f.PositionSeconds > 3));
+                List<MediaFile> filesToStart = new List<MediaFile>(files.Where(f => f.PositionSeconds <= 3));
+                addFiles(filesToContinue, rnd);
+                addFiles(filesToStart, rnd);
+            }
+            else
+            {
+                List<MediaFile> filesToRandomize = new List<MediaFile>(files);
+                addFiles(filesToRandomize, rnd);
+            }
+        }
+
+        private void addFiles(List<MediaFile> filesToRandomize, Random rnd)
+        {
             while (filesToRandomize.Count > 0)
             {
                 int next = rnd.Next(filesToRandomize.Count);
@@ -20,18 +36,18 @@ namespace WatchItOnce.MediaFileIterator
                 filesToRandomize.Remove(mediaFile);
                 mFiles.Add(mediaFile);
             }
-            mNextFile = 0;
         }
 
         List<MediaFile> mFiles = new List<MediaFile>();
-        int mNextFile;
 
-        public MediaFile GetNextFile()
+        public IEnumerator<MediaFile> GetEnumerator()
         {
-            if (mNextFile >= mFiles.Count)
-                return null;
+            return mFiles.GetEnumerator();
+        }
 
-            return mFiles[mNextFile++];
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return mFiles.GetEnumerator();
         }
     }
 }
