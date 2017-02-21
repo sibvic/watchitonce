@@ -77,7 +77,7 @@ namespace WatchItOnce
 
             DeleteAfterWatch = false;
             SortOrder = SortOrder.Default;
-            Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob", "*.ts", "*.mpg" });
+            Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob", "*.ts", "*.mpg", "*.m4v" });
 
             StringIterator strings = new StringIterator(args);
             string current = strings.GetNext();
