@@ -69,25 +69,18 @@ namespace WatchItOnce
 
         private static IMediaFileIterator createIterator(Options options, MediaFile[] files)
         {
-            IMediaFileIterator mediaFiles;
             switch (options.SortOrder)
             {
                 default:
                 case SortOrder.Default:
-                    mediaFiles = new OrderedIterator(files);
-                    break;
+                    return new OrderedIterator(files);
                 case SortOrder.Random:
-                    mediaFiles = new RandomIterator(files, false);
-                    break;
+                    return new RandomIterator(files, false);
                 case SortOrder.RandomContinue:
-                    mediaFiles = new RandomIterator(files, true);
-                    break;
+                    return new RandomIterator(files, true);
                 case SortOrder.ByName:
-                    mediaFiles = new SoredByNameIterator(files);
-                    break;
+                    return new SoredByNameIterator(files);
             }
-
-            return mediaFiles;
         }
 
         static void playerWindow_OnMediaEnded(MediaFile file)
