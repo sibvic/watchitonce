@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using Implementation;
 using Declarations;
 using Declarations.Players;
-using Declarations.Events;
-using Declarations.Media;
 
 namespace WatchItOnce
 {
@@ -93,12 +86,12 @@ namespace WatchItOnce
 
         private bool playNextVideo()
         {
-            if (!mFilesIterator.MoveNext())
+            MediaFile next = GetNextFile();
+            if (next == null)
             {
                 mPlayingFile = null;
                 return false;
             }
-            MediaFile next = mFilesIterator.Current;
             if (mPlayingFile != null && OnMediaSkipped != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
 
@@ -111,6 +104,26 @@ namespace WatchItOnce
                 mPlayer.Volume = vol;
             }));
             return true;
+        }
+
+        /// <summary>
+        /// Get next file in the queue.
+        /// Unexisted files will be skipped.
+        /// </summary>
+        /// <returns>Next file or null</returns>
+        private MediaFile GetNextFile()
+        {
+            MediaFile next = null;
+            while (mFilesIterator.MoveNext() && next == null)
+            {
+                next = mFilesIterator.Current;
+                if (!System.IO.File.Exists(next.Path))
+                {
+                    next = null;
+                }
+            }
+
+            return next;
         }
 
         #region speed control
