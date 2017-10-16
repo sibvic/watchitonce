@@ -55,19 +55,19 @@ namespace WatchItOnce
                 return;
             }
 
-            IMediaFileIterator mediaFiles = createIterator(options, files);
+            IMediaFileIterator mediaFiles = CreateIterator(options, files);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             PlayerOptions playerOptions = new PlayerOptions(options.AutoNext);
             var playerWindow = new PlayerWindow(mediaFiles, playerOptions);
-            playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(playerWindow_OnMediaSkipped);
+            playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(PlayerWindow_OnMediaSkipped);
             if (options.DeleteAfterWatch)
-                playerWindow.OnMediaEnded += new OnMediaEndedDelegate(playerWindow_OnMediaEnded);
+                playerWindow.OnMediaEnded += new OnMediaEndedDelegate(PlayerWindow_OnMediaEnded);
             Application.Run(playerWindow);
         }
 
-        private static IMediaFileIterator createIterator(Options options, MediaFile[] files)
+        private static IMediaFileIterator CreateIterator(Options options, MediaFile[] files)
         {
             switch (options.SortOrder)
             {
@@ -83,7 +83,7 @@ namespace WatchItOnce
             }
         }
 
-        static void playerWindow_OnMediaEnded(MediaFile file)
+        static void PlayerWindow_OnMediaEnded(MediaFile file)
         {
             string infoPath = file.Path + ".info";
             if (System.IO.File.Exists(infoPath))
@@ -95,7 +95,7 @@ namespace WatchItOnce
             System.IO.File.Delete(file.Path);
         }
 
-        static void playerWindow_OnMediaSkipped(MediaFile file, long lastPosition)
+        static void PlayerWindow_OnMediaSkipped(MediaFile file, long lastPosition)
         {
             string infoPath = file.Path + ".info";
             System.IO.File.WriteAllText(infoPath, lastPosition.ToString());

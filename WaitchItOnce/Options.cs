@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using WatchItOnce.FileFilter;
 
@@ -58,7 +56,7 @@ namespace WatchItOnce
         }
         List<IOptionController> mOptions = new List<IOptionController>();
 
-        bool parseOption(string optionName, StringIterator strings)
+        bool ParseOption(string optionName, StringIterator strings)
         {
             foreach (IOptionController option in mOptions)
             {
@@ -77,13 +75,13 @@ namespace WatchItOnce
 
             DeleteAfterWatch = false;
             SortOrder = SortOrder.Default;
-            Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob", "*.ts", "*.mpg" });
+            Extensions = new List<string>(new string[] { "*.mkv", "*.avi", "*.mp4", "*.webm", "*.wmv", "*.vob", "*.ts", "*.mpg", "*.m4v" });
 
             StringIterator strings = new StringIterator(args);
             string current = strings.GetNext();
             while (current != null)
             {
-                if (!parseOption(current, strings))
+                if (!ParseOption(current, strings))
                 {
                     switch (current)
                     {

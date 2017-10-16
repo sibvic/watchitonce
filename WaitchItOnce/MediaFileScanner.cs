@@ -17,10 +17,7 @@
 //     
 // ========================================================================
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace WatchItOnce
@@ -35,7 +32,7 @@ namespace WatchItOnce
         IFileFilter mFilter;
         string[] mExtensions;
 
-        long getPosition(string path)
+        long GetPosition(string path)
         {
             string infoPath = path + ".info";
             if (File.Exists(infoPath))
@@ -48,13 +45,13 @@ namespace WatchItOnce
             return 0;
         }
 
-        void scannFolder(string path)
+        void ScannFolder(string path)
         {
             try
             {
                 foreach (string folder in Directory.GetDirectories((string)path))
                 {
-                    scannFolder(folder);
+                    ScannFolder(folder);
                 }
                 foreach (string extension in mExtensions)
                 {
@@ -62,7 +59,7 @@ namespace WatchItOnce
                     {
                         if (mFilter != null && !mFilter.IsPassing(file))
                             continue;
-                        long position = getPosition(file);
+                        long position = GetPosition(file);
                         mFiles.Add(new MediaFile(file, position));
                     }
                 }
@@ -77,7 +74,7 @@ namespace WatchItOnce
         public static MediaFile[] GetFromFolder(string path, IFileFilter filter, string[] extensions)
         {
             MediaFileScanner scaner = new MediaFileScanner(filter, extensions);
-            scaner.scannFolder(path);
+            scaner.ScannFolder(path);
             return scaner.mFiles.ToArray();
         }
     }

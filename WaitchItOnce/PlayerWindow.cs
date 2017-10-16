@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Implementation;
 using Declarations;
 using Declarations.Players;
+using System.Timers;
 
 namespace WatchItOnce
 {
@@ -15,6 +16,10 @@ namespace WatchItOnce
     {
         public PlayerWindow(IMediaFileIterator files, PlayerOptions options)
         {
+            mProgressTimer = new System.Timers.Timer(500);
+            mProgressTimer.Elapsed += new System.Timers.ElapsedEventHandler(UpdateProgress);
+            mProgressTimer.Start();
+
             mOptions = options;
             mFiles = files;
             mFilesIterator = mFiles.GetEnumerator();
@@ -33,7 +38,7 @@ namespace WatchItOnce
             mPlayer.WindowHandle = Handle;
             mPlayer.KeyInputEnabled = false;
 
-            KeyDown += new KeyEventHandler(playerWindow_KeyDown);
+            KeyDown += new KeyEventHandler(PlayerWindow_KeyDown);
         }
 
         public event OnMediaEndedDelegate OnMediaEnded;
@@ -52,6 +57,30 @@ namespace WatchItOnce
         int mLastLeft;
         MediaFile mPlayingFile;
         System.Timers.Timer mTimer;
+        System.Timers.Timer mProgressTimer;
+
+        string _mediaName;
+        long? _lastPosition;
+
+        private void UpdateProgress(object sender, ElapsedEventArgs e)
+        {
+            if (mPlayingFile != null && mPlayerController.IsPlaying)
+            {
+                if (mPlayer.Length > 0)
+                {
+                    long positionInSeconds = mPlayer.Time / 1000;
+                    if (_lastPosition.HasValue && positionInSeconds == _lastPosition.Value)
+                        return;
+                    _lastPosition = positionInSeconds;
+                    var position = mPlayer.Time * 100.0 / mPlayer.Length;
+                    var cationTime = string.Format(" {0}% ({1}/{2})", Math.Round(position), TimeSpan.FromMilliseconds(mPlayer.Time).ToString(@"hh\:mm\:ss"), TimeSpan.FromMilliseconds(mPlayer.Length).ToString(@"hh\:mm\:ss"));
+                    BeginInvoke(new Action(delegate
+                    {
+                        Text = _mediaName + cationTime;
+                    }));
+                }
+            }
+        }
 
         private void EnterFullscreen()
         {
@@ -81,10 +110,11 @@ namespace WatchItOnce
             if (mPlayerController.IsPlaying)
                 mPlayerController.Stop();
             mPlayerController.Open(fullFileName);
-            Text = System.IO.Path.GetFileNameWithoutExtension(fullFileName);
+            _mediaName = System.IO.Path.GetFileNameWithoutExtension(mPlayingFile.Path);
+            Text = _mediaName;
         }
 
-        private bool playNextVideo()
+        private bool PlayNextVideo()
         {
             MediaFile next = GetNextFile();
             if (next == null)
@@ -95,7 +125,7 @@ namespace WatchItOnce
             if (mPlayingFile != null && OnMediaSkipped != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
 
-            this.BeginInvoke(new Action(delegate
+            BeginInvoke(new Action(delegate
             {
                 int vol = mPlayer.Volume;
                 Open(next);
@@ -140,36 +170,36 @@ namespace WatchItOnce
         }
         #endregion
 
-        private void seekSeconds(int seconds)
+        private void SeekSeconds(int seconds)
         {
             mPlayer.Time = Math.Min(mPlayer.Length, Math.Max(0, mPlayer.Time + seconds * 1000));
         }
 
-        private static int getSeekSeconds()
+        private static int GetSeekSeconds()
         {
             int seek = 5;
-            if ((Control.ModifierKeys & Keys.Alt) != 0)
+            if ((ModifierKeys & Keys.Alt) != 0)
                 seek *= 2;
-            if ((Control.ModifierKeys & Keys.Control) != 0)
+            if ((ModifierKeys & Keys.Control) != 0)
                 seek *= 3;
-            if ((Control.ModifierKeys & Keys.Shift) != 0)
+            if ((ModifierKeys & Keys.Shift) != 0)
                 seek *= 4;
             return seek;
         }
 
-        private static int getVolumeLeap()
+        private static int GetVolumeLeap()
         {
             int gain = 1;
-            if ((Control.ModifierKeys & Keys.Alt) != 0)
+            if ((ModifierKeys & Keys.Alt) != 0)
                 gain *= 2;
-            if ((Control.ModifierKeys & Keys.Control) != 0)
+            if ((ModifierKeys & Keys.Control) != 0)
                 gain *= 3;
-            if ((Control.ModifierKeys & Keys.Shift) != 0)
+            if ((ModifierKeys & Keys.Shift) != 0)
                 gain *= 4;
             return gain;
         }
 
-        void playerWindow_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        void PlayerWindow_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -195,11 +225,11 @@ namespace WatchItOnce
                     e.Handled = true;
                     break;
                 case Keys.N:
-                    if (!playNextVideo())
+                    if (!PlayNextVideo())
                         mPlayerController.Pause();
                     break;
                 case Keys.M:
-                    if (System.Windows.Forms.MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
                         break;
                     mPlayerController.Stop();
                     if (OnMediaEnded != null)
@@ -207,7 +237,7 @@ namespace WatchItOnce
                         OnMediaEnded(mPlayingFile);
                         mPlayingFile = null;
                     }
-                    playNextVideo();
+                    PlayNextVideo();
                     break;
                 case Keys.D0:
                     speedOnOff();
@@ -251,28 +281,28 @@ namespace WatchItOnce
                     break;
                 case Keys.Left:
                     {
-                        int seek = getSeekSeconds();
-                        seekSeconds(-seek);
+                        int seek = GetSeekSeconds();
+                        SeekSeconds(-seek);
                     }
                     e.Handled = true;
                     break;
                 case Keys.Right:
                     {
-                        int seek = getSeekSeconds();
-                        seekSeconds(seek);
+                        int seek = GetSeekSeconds();
+                        SeekSeconds(seek);
                     }
                     e.Handled = true;
                     break;
                 case Keys.Up:
                     {
-                        int gain = getVolumeLeap();
+                        int gain = GetVolumeLeap();
                         mPlayer.Volume = Math.Min(100, mPlayer.Volume + gain);
                     }
                     e.Handled = true;
                     break;
                 case Keys.Down:
                     {
-                        int gain = getVolumeLeap();
+                        int gain = GetVolumeLeap();
                         mPlayer.Volume = Math.Max(0, mPlayer.Volume - gain);
                     }
                     e.Handled = true;
@@ -282,32 +312,32 @@ namespace WatchItOnce
 
         void Events_PlayerStopped(object sender, EventArgs e)
         {
-            deleteTimer();
+            DeleteTimer();
         }
 
         void Events_PlayerPlaying(object sender, EventArgs e)
         {
-            deleteTimer();
+            DeleteTimer();
             if (mOptions.AutoNext != null)
             {
                 mTimer = new System.Timers.Timer();
                 mTimer.Interval = mOptions.AutoNext.Value * 1000;
-                mTimer.Elapsed += new System.Timers.ElapsedEventHandler(mTimer_Elapsed);
+                mTimer.Elapsed += new System.Timers.ElapsedEventHandler(MTimer_Elapsed);
                 mTimer.Start();
             }
         }
 
-        void mTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        void MTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            playNextVideo();
+            PlayNextVideo();
         }
 
         void Events_PlayerPaused(object sender, EventArgs e)
         {
-            deleteTimer();
+            DeleteTimer();
         }
 
-        private void deleteTimer()
+        private void DeleteTimer()
         {
             if (mTimer != null)
             {
@@ -319,26 +349,28 @@ namespace WatchItOnce
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
-            deleteTimer();
+            DeleteTimer();
             mPlayerController.Stop();
             if (OnMediaEnded != null)
             {
                 OnMediaEnded(mPlayingFile);
                 mPlayingFile = null;
             }
-            if (!playNextVideo())
+            if (!PlayNextVideo())
                 mPlayerController.Pause();
         }
 
         private void PlayerWindow_Load(object sender, EventArgs e)
         {
-            playNextVideo();
+            PlayNextVideo();
         }
 
         private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (OnMediaSkipped != null && mPlayingFile != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
+            mProgressTimer.Stop();
+            mProgressTimer.Dispose();
         }
     }
 }
