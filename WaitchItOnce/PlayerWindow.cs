@@ -6,6 +6,8 @@ using Implementation;
 using Declarations;
 using Declarations.Players;
 using System.Timers;
+using System.Drawing;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace WatchItOnce
 {
@@ -17,9 +19,9 @@ namespace WatchItOnce
         public PlayerWindow(IMediaFileIterator files, PlayerOptions options)
         {
             mProgressTimer = new System.Timers.Timer(500);
-            mProgressTimer.Elapsed += new System.Timers.ElapsedEventHandler(UpdateProgress);
+            mProgressTimer.Elapsed += new ElapsedEventHandler(UpdateProgress);
             mProgressTimer.Start();
-
+            
             mOptions = options;
             mFiles = files;
             mFilesIterator = mFiles.GetEnumerator();
@@ -39,6 +41,34 @@ namespace WatchItOnce
             mPlayer.KeyInputEnabled = false;
 
             KeyDown += new KeyEventHandler(PlayerWindow_KeyDown);
+
+            _playPauseButton = new ThumbnailToolBarButton(SystemIcons.Asterisk, "Play/Pause");//todo: use custom icons
+            _playPauseButton.Click += _playPauseButton_Click;
+            _nextButton = new ThumbnailToolBarButton(SystemIcons.Exclamation, "Next");
+            _nextButton.Click += _nextButton_Click;
+            _markWatchedButton = new ThumbnailToolBarButton(SystemIcons.Error, "Mark as watched");
+            _markWatchedButton.Click += _markWatchedButton_Click;
+            TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, new ThumbnailToolBarButton[]
+            {
+                _playPauseButton,
+                _nextButton,
+                _markWatchedButton
+            });
+        }
+
+        private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            DoMarkWatched();
+        }
+
+        private void _nextButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            DoNext();
+        }
+
+        private void _playPauseButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            DoPlayPause();
         }
 
         public event OnMediaEndedDelegate OnMediaEnded;
@@ -61,6 +91,10 @@ namespace WatchItOnce
 
         string _mediaName;
         long? _lastPosition;
+
+        private ThumbnailToolBarButton _playPauseButton;
+        private ThumbnailToolBarButton _nextButton;
+        private ThumbnailToolBarButton _markWatchedButton;
 
         private void UpdateProgress(object sender, ElapsedEventArgs e)
         {
@@ -158,7 +192,7 @@ namespace WatchItOnce
 
         #region speed control
         float mSpeed = 1.0f;
-        private void speedOnOff()
+        private void SpeedOnOff()
         {
             if (mPlayer.PlaybackRate == 1.0f)
                 mPlayer.PlaybackRate = mSpeed;
@@ -204,7 +238,6 @@ namespace WatchItOnce
             switch (e.KeyCode)
             {
                 case Keys.A:
-                    //TODO: test
                     mPlayerController.SwitchDeinterlacing();
                     break;
                 case Keys.S:
@@ -225,22 +258,13 @@ namespace WatchItOnce
                     e.Handled = true;
                     break;
                 case Keys.N:
-                    if (!PlayNextVideo())
-                        mPlayerController.Pause();
+                    DoNext();
                     break;
                 case Keys.M:
-                    if (MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != System.Windows.Forms.DialogResult.Yes)
-                        break;
-                    mPlayerController.Stop();
-                    if (OnMediaEnded != null)
-                    {
-                        OnMediaEnded(mPlayingFile);
-                        mPlayingFile = null;
-                    }
-                    PlayNextVideo();
+                    DoMarkWatched();
                     break;
                 case Keys.D0:
-                    speedOnOff();
+                    SpeedOnOff();
                     break;
                 case Keys.D1:
                     mPlayer.PlaybackRate = 1.1f;
@@ -274,10 +298,7 @@ namespace WatchItOnce
                         EscapeFullscreen();
                     break;
                 case Keys.Space:
-                    if (mPlayerController.IsPlaying)
-                        mPlayerController.Pause();
-                    else
-                        mPlayerController.Play();
+                    DoPlayPause();
                     break;
                 case Keys.Left:
                     {
@@ -308,6 +329,33 @@ namespace WatchItOnce
                     e.Handled = true;
                     break;
             }
+        }
+
+        private void DoMarkWatched()
+        {
+            if (MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            mPlayerController.Stop();
+            if (OnMediaEnded != null)
+            {
+                OnMediaEnded(mPlayingFile);
+                mPlayingFile = null;
+            }
+            PlayNextVideo();
+        }
+
+        private void DoNext()
+        {
+            if (!PlayNextVideo())
+                mPlayerController.Pause();
+        }
+
+        private void DoPlayPause()
+        {
+            if (mPlayerController.IsPlaying)
+                mPlayerController.Pause();
+            else
+                mPlayerController.Play();
         }
 
         void Events_PlayerStopped(object sender, EventArgs e)
