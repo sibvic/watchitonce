@@ -24,11 +24,15 @@ namespace WatchItOnce
     /// </summary>
     public class PlayerOptions
     {
-        public PlayerOptions(int? autoNext)
+        public PlayerOptions()
         {
-            AutoNext = autoNext;
         }
 
-        public int? AutoNext { get; private set; }
+        public int? AutoNext { get; internal set; }
+
+        /// <summary>
+        /// Number seconds to play. The player will be automatically closed after timer run out.
+        /// </summary>
+        public int? AutoClose { get; internal set; }
     }
 }

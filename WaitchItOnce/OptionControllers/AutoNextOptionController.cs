@@ -32,8 +32,7 @@ namespace WatchItOnce
                 if (val == null)
                     throw new ArgumentException("--autonext should be followed by the interval in seconds");
 
-                int interval;
-                if (!int.TryParse(val, out interval))
+                if (!int.TryParse(val, out int interval))
                     throw new ArgumentException("Can't part number of seconds for the --autonext parameter");
 
                 mOptions.AutoNext = interval;

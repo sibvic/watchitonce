@@ -53,6 +53,7 @@ namespace WatchItOnce
         public Options()
         {
             mOptions.Add(new AutoNextOptionController(this));
+            mOptions.Add(new AutoCloseOptionController(this));
         }
         List<IOptionController> mOptions = new List<IOptionController>();
 
@@ -129,5 +130,6 @@ namespace WatchItOnce
         public SortOrder SortOrder { get; private set; }
         public List<string> Extensions { get; private set; }
         public int? AutoNext { get; internal set; }
+        public int? AutoClose { get; internal set; }
     }
 }
