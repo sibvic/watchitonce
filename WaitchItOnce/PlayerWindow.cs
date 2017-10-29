@@ -181,17 +181,16 @@ namespace WatchItOnce
         /// <returns>Next file or null</returns>
         private MediaFile GetNextFile()
         {
-            MediaFile next = null;
-            while (mFilesIterator.MoveNext() && next == null)
+            while (mFilesIterator.MoveNext())
             {
-                next = mFilesIterator.Current;
-                if (!System.IO.File.Exists(next.Path))
+                MediaFile next = mFilesIterator.Current;
+                if (next == null || System.IO.File.Exists(next.Path))
                 {
-                    next = null;
+                    return next;
                 }
             }
 
-            return next;
+            return null;
         }
 
         #region speed control
