@@ -22,12 +22,9 @@ namespace WatchItOnce
         public void Open(string file)
         {
             mMedia = mPlayerFactory.CreateMedia<IMedia>(file, new string[] { });
-            mMedia.Events.StateChanged += MediaStateChange;
             mPlayer.Open(mMedia);
             mMedia.Parse(true);
         }
-
-        public EventHandler<MediaStateChange> MediaStateChange;
 
         public bool IsPlaying { get; private set; }
 
