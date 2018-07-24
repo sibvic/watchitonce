@@ -59,7 +59,11 @@ namespace WatchItOnce
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            PlayerOptions playerOptions = new PlayerOptions(options.AutoNext);
+            var playerOptions = new PlayerOptions()
+            {
+                AutoNext = options.AutoNext,
+                AutoClose = options.AutoClose
+            };
             var playerWindow = new PlayerWindow(mediaFiles, playerOptions);
             playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(PlayerWindow_OnMediaSkipped);
             if (options.DeleteAfterWatch)

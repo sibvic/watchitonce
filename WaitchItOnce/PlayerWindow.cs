@@ -8,13 +8,14 @@ using Declarations.Players;
 using System.Timers;
 using System.Drawing;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using WatchItOnce.Player;
 
 namespace WatchItOnce
 {
     public delegate void OnMediaEndedDelegate(MediaFile file);
     public delegate void OnMediaSkippedDelegate(MediaFile file, long lastPosition);
 
-    public partial class PlayerWindow : Form
+    public partial class PlayerWindow : Form, IPlayerWindowController
     {
         public PlayerWindow(IMediaFileIterator files, PlayerOptions options)
         {
@@ -54,22 +55,26 @@ namespace WatchItOnce
                 _nextButton,
                 _markWatchedButton
             });
+
+            if (mOptions.AutoNext.HasValue)
+            {
+                strategy = new AutoNextStrategy(this, mOptions.AutoNext.Value);
+            }
+            else if (mOptions.AutoClose.HasValue)
+            {
+                strategy = new AutoCloseStrategy(this, mOptions.AutoClose.Value);
+            }
+            else
+            {
+                strategy = new DefaultStrategy();
+            }
         }
 
-        private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
-        {
-            DoMarkWatched();
-        }
+        private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoMarkWatched();
+        private void _nextButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoNext();
+        private void _playPauseButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoPlayPause();
 
-        private void _nextButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
-        {
-            DoNext();
-        }
-
-        private void _playPauseButton_Click(object sender, ThumbnailButtonClickedEventArgs e)
-        {
-            DoPlayPause();
-        }
+        IStrategy strategy;
 
         public event OnMediaEndedDelegate OnMediaEnded;
         public event OnMediaSkippedDelegate OnMediaSkipped;
@@ -86,7 +91,6 @@ namespace WatchItOnce
         int mLastTop;
         int mLastLeft;
         MediaFile mPlayingFile;
-        System.Timers.Timer mTimer;
         System.Timers.Timer mProgressTimer;
 
         string _mediaName;
@@ -177,17 +181,16 @@ namespace WatchItOnce
         /// <returns>Next file or null</returns>
         private MediaFile GetNextFile()
         {
-            MediaFile next = null;
-            while (mFilesIterator.MoveNext() && next == null)
+            while (mFilesIterator.MoveNext())
             {
-                next = mFilesIterator.Current;
-                if (!System.IO.File.Exists(next.Path))
+                MediaFile next = mFilesIterator.Current;
+                if (next == null || System.IO.File.Exists(next.Path))
                 {
-                    next = null;
+                    return next;
                 }
             }
 
-            return next;
+            return null;
         }
 
         #region speed control
@@ -343,13 +346,7 @@ namespace WatchItOnce
             }
             PlayNextVideo();
         }
-
-        private void DoNext()
-        {
-            if (!PlayNextVideo())
-                mPlayerController.Pause();
-        }
-
+        
         private void DoPlayPause()
         {
             if (mPlayerController.IsPlaying)
@@ -358,46 +355,13 @@ namespace WatchItOnce
                 mPlayerController.Play();
         }
 
-        void Events_PlayerStopped(object sender, EventArgs e)
-        {
-            DeleteTimer();
-        }
-
-        void Events_PlayerPlaying(object sender, EventArgs e)
-        {
-            DeleteTimer();
-            if (mOptions.AutoNext != null)
-            {
-                mTimer = new System.Timers.Timer();
-                mTimer.Interval = mOptions.AutoNext.Value * 1000;
-                mTimer.Elapsed += new ElapsedEventHandler(MTimer_Elapsed);
-                mTimer.Start();
-            }
-        }
-
-        void MTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            PlayNextVideo();
-        }
-
-        void Events_PlayerPaused(object sender, EventArgs e)
-        {
-            DeleteTimer();
-        }
-
-        private void DeleteTimer()
-        {
-            if (mTimer != null)
-            {
-                mTimer.Stop();
-                mTimer.Dispose();
-                mTimer = null;
-            }
-        }
+        void Events_PlayerStopped(object sender, EventArgs e) => strategy.OnStopped();
+        void Events_PlayerPlaying(object sender, EventArgs e) => strategy.OnStarted();
+        void Events_PlayerPaused(object sender, EventArgs e) => strategy.OnPaused();
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
-            DeleteTimer();
+            strategy.OnStarted();
             mPlayerController.Stop();
             if (OnMediaEnded != null)
             {
@@ -408,17 +372,29 @@ namespace WatchItOnce
                 mPlayerController.Pause();
         }
 
-        private void PlayerWindow_Load(object sender, EventArgs e)
-        {
-            PlayNextVideo();
-        }
+        private void PlayerWindow_Load(object sender, EventArgs e) => PlayNextVideo();
 
         private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+            strategy.Dispose();
             if (OnMediaSkipped != null && mPlayingFile != null)
                 OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
             mProgressTimer.Stop();
             mProgressTimer.Dispose();
+        }
+
+        public void DoNext()
+        {
+            if (!PlayNextVideo())
+                mPlayerController.Pause();
+        }
+
+        public void DoClose()
+        {
+            BeginInvoke(new Action(delegate
+            {
+                Close();
+            }));
         }
     }
 }
