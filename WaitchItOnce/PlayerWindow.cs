@@ -370,12 +370,12 @@ namespace WatchItOnce
             {
                 mTimer = new System.Timers.Timer();
                 mTimer.Interval = mOptions.AutoNext.Value * 1000;
-                mTimer.Elapsed += new System.Timers.ElapsedEventHandler(MTimer_Elapsed);
+                mTimer.Elapsed += new ElapsedEventHandler(MTimer_Elapsed);
                 mTimer.Start();
             }
         }
 
-        void MTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        void MTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             PlayNextVideo();
         }
