@@ -13,6 +13,6 @@ Available console keys:
 
 In the windows thumbnail mode the deletion of file/moving to the next file could be done by pressing the eject button (red icon) twice.
 
-== Thanks
+## Thanks
 
 [https://www.iconfinder.com/olivetty](https://www.iconfinder.com/olivetty) for the icons.
