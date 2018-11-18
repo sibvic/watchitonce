@@ -43,11 +43,11 @@ namespace WatchItOnce
 
             KeyDown += new KeyEventHandler(PlayerWindow_KeyDown);
 
-            _playPauseButton = new ThumbnailToolBarButton(SystemIcons.Asterisk, "Play/Pause");//todo: use custom icons
+            _playPauseButton = new ThumbnailToolBarButton(Properties.Resources.PlayIcon, "Play/Pause");//todo: use custom icons
             _playPauseButton.Click += _playPauseButton_Click;
-            _nextButton = new ThumbnailToolBarButton(SystemIcons.Exclamation, "Next");
+            _nextButton = new ThumbnailToolBarButton(Properties.Resources.NextIcon, "Next");
             _nextButton.Click += _nextButton_Click;
-            _markWatchedButton = new ThumbnailToolBarButton(SystemIcons.Error, "Mark as watched");
+            _markWatchedButton = new ThumbnailToolBarButton(Properties.Resources.DeleteIcon, "Mark as watched");
             _markWatchedButton.Click += _markWatchedButton_Click;
             TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, new ThumbnailToolBarButton[]
             {
@@ -334,10 +334,14 @@ namespace WatchItOnce
             }
         }
 
+        MediaFile _lastFileToDelete;
         private void DoMarkWatched()
         {
-            if (MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (_lastFileToDelete != mPlayingFile)
+            {
+                _lastFileToDelete = mPlayingFile;
                 return;
+            }
             mPlayerController.Stop();
             if (OnMediaEnded != null)
             {
