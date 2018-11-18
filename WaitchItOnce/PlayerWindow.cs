@@ -70,7 +70,7 @@ namespace WatchItOnce
             }
         }
 
-        private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoMarkWatched();
+        private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoMarkWatched(false);
         private void _nextButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoNext();
         private void _playPauseButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoPlayPause();
 
@@ -264,7 +264,7 @@ namespace WatchItOnce
                     DoNext();
                     break;
                 case Keys.M:
-                    DoMarkWatched();
+                    DoMarkWatched(true);
                     break;
                 case Keys.D0:
                     SpeedOnOff();
@@ -335,12 +335,20 @@ namespace WatchItOnce
         }
 
         MediaFile _lastFileToDelete;
-        private void DoMarkWatched()
+        private void DoMarkWatched(bool askConfirmation)
         {
-            if (_lastFileToDelete != mPlayingFile)
+            if (askConfirmation)
             {
-                _lastFileToDelete = mPlayingFile;
-                return;
+                if (MessageBox.Show("Are you sure?", "Mark as watched?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+            else
+            {
+                if (_lastFileToDelete != mPlayingFile)
+                {
+                    _lastFileToDelete = mPlayingFile;
+                    return;
+                }
             }
             mPlayerController.Stop();
             if (OnMediaEnded != null)
