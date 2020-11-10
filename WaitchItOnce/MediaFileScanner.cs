@@ -32,19 +32,6 @@ namespace WatchItOnce
         IFileFilter mFilter;
         string[] mExtensions;
 
-        long GetPosition(string path)
-        {
-            string infoPath = path + ".info";
-            if (File.Exists(infoPath))
-            {
-                string data = File.ReadAllText(infoPath);
-                long position;
-                if (long.TryParse(data, out position))
-                    return position;
-            }
-            return 0;
-        }
-
         void ScannFolder(string path)
         {
             try
@@ -59,8 +46,7 @@ namespace WatchItOnce
                     {
                         if (mFilter != null && !mFilter.IsPassing(file))
                             continue;
-                        long position = GetPosition(file);
-                        mFiles.Add(new MediaFile(file, position));
+                        mFiles.Add(new MediaFile(file));
                     }
                 }
             }

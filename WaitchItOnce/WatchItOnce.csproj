@@ -123,9 +123,7 @@
       <Name>LibVlcWrapper</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\PlayIcon.ico" />
   </ItemGroup>
