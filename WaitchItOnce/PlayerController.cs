@@ -1,9 +1,7 @@
-﻿using System;
-
+﻿
 using Declarations.Players;
 using Declarations;
 using Declarations.Media;
-using Declarations.Events;
 
 namespace WatchItOnce
 {
@@ -15,8 +13,8 @@ namespace WatchItOnce
             mPlayerFactory = playerFactory;
         }
 
-        IDiskPlayer mPlayer;
-        IMediaPlayerFactory mPlayerFactory;
+        readonly IDiskPlayer mPlayer;
+        readonly IMediaPlayerFactory mPlayerFactory;
         IMedia mMedia;
 
         public void Open(string file)

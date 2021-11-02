@@ -6,13 +6,14 @@ using Implementation;
 using Declarations;
 using Declarations.Players;
 using System.Timers;
-using System.Drawing;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using WatchItOnce.Player;
+using WatchItOnce.Forms;
 
 namespace WatchItOnce
 {
     public delegate void OnMediaEndedDelegate(MediaFile file);
+    public delegate void OnLogMessageDelegate(MediaFile file, string message, long position);
     public delegate void OnMediaSkippedDelegate(MediaFile file, long lastPosition);
 
     public partial class PlayerWindow : Form, IPlayerWindowController
@@ -78,6 +79,7 @@ namespace WatchItOnce
 
         public event OnMediaEndedDelegate OnMediaEnded;
         public event OnMediaSkippedDelegate OnMediaSkipped;
+        public event OnLogMessageDelegate OnLogMessage;
 
         PlayerOptions mOptions;
         IMediaFileIterator mFiles;
@@ -240,6 +242,9 @@ namespace WatchItOnce
         {
             switch (e.KeyCode)
             {
+                case Keys.Z:
+                    AddMark();
+                    break;
                 case Keys.A:
                     mPlayerController.SwitchDeinterlacing();
                     break;
@@ -332,6 +337,22 @@ namespace WatchItOnce
                     e.Handled = true;
                     break;
             }
+        }
+
+        private void AddMark()
+        {
+            DoPlayPause();
+            var messageForm = new AskMessageForm();
+            var result = messageForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                var message = messageForm.GetMessage();
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    OnLogMessage?.Invoke(mPlayingFile, message, (long)(mPlayer.Length * mPlayer.Position / 1000));
+                }
+            }
+            DoPlayPause();
         }
 
         MediaFile _lastFileToDelete;

@@ -68,7 +68,23 @@ namespace WatchItOnce
             playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(PlayerWindow_OnMediaSkipped);
             if (options.DeleteAfterWatch)
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(PlayerWindow_OnMediaEnded);
+            playerWindow.OnLogMessage += PlayerWindow_OnLogMessage;
             Application.Run(playerWindow);
+        }
+
+        static string FormatPosition(long position)
+        {
+            var hours = position / 3600;
+            position -= hours * 3600;
+            var minutes = position / 60;
+            position -= minutes * 60;
+            return hours.ToString("00") + ":" + minutes.ToString("00") + ":" + position.ToString("00");
+        }
+
+        private static void PlayerWindow_OnLogMessage(MediaFile file, string message, long position)
+        {
+            string logPath = file.Path + ".desc";
+            System.IO.File.AppendAllText(logPath, FormatPosition(position) + "\n" + message + "\n\n");
         }
 
         private static IMediaFileIterator CreateIterator(Options options, MediaFile[] files)

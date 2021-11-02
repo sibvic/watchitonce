@@ -60,6 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFilter\RegexpMatchFilter.cs" />
+    <Compile Include="Forms\AskMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AskMessageForm.Designer.cs">
+      <DependentUpon>AskMessageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="IFileFilter.cs" />
     <Compile Include="IMediaFileIterator.cs" />
     <Compile Include="FileFilter\SimpleMatchFilter.cs" />
@@ -88,6 +94,9 @@
     <Compile Include="Player\IStrategy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\AskMessageForm.resx">
+      <DependentUpon>AskMessageForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="PlayerWindow.resx">
       <DependentUpon>PlayerWindow.cs</DependentUpon>
     </EmbeddedResource>
