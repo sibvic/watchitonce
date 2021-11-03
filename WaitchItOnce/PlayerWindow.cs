@@ -341,7 +341,7 @@ namespace WatchItOnce
 
         private void AddMark()
         {
-            DoPlayPause();
+            long position = (long)(mPlayer.Length * mPlayer.Position / 1000);
             var messageForm = new AskMessageForm();
             var result = messageForm.ShowDialog();
             if (result == DialogResult.OK)
@@ -349,10 +349,9 @@ namespace WatchItOnce
                 var message = messageForm.GetMessage();
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    OnLogMessage?.Invoke(mPlayingFile, message, (long)(mPlayer.Length * mPlayer.Position / 1000));
+                    OnLogMessage?.Invoke(mPlayingFile, message, position);
                 }
             }
-            DoPlayPause();
         }
 
         MediaFile _lastFileToDelete;

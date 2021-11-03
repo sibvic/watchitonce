@@ -36,6 +36,9 @@ namespace WatchItOnce.Forms
             // 
             // messageTextBox
             // 
+            this.messageTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.messageTextBox.Location = new System.Drawing.Point(12, 12);
             this.messageTextBox.Multiline = true;
             this.messageTextBox.Name = "messageTextBox";
@@ -44,6 +47,7 @@ namespace WatchItOnce.Forms
             // 
             // okButton
             // 
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.okButton.Location = new System.Drawing.Point(632, 415);
             this.okButton.Name = "okButton";
@@ -54,6 +58,7 @@ namespace WatchItOnce.Forms
             // 
             // cancelButton
             // 
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Location = new System.Drawing.Point(713, 415);
             this.cancelButton.Name = "cancelButton";
