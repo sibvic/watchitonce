@@ -243,7 +243,7 @@ namespace WatchItOnce
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    AddMark();
+                    AddMark((ModifierKeys & Keys.Control) != 0);
                     break;
                 case Keys.A:
                     mPlayerController.SwitchDeinterlacing();
@@ -339,18 +339,28 @@ namespace WatchItOnce
             }
         }
 
-        private void AddMark()
+        private void AddMark(bool todo)
         {
             long position = (long)(mPlayer.Length * mPlayer.Position / 1000);
+            if (todo)
+            {
+                WriteMark(position, "TODO");
+                return;
+            }
             var messageForm = new AskMessageForm();
             var result = messageForm.ShowDialog();
             if (result == DialogResult.OK)
             {
                 var message = messageForm.GetMessage();
-                if (!string.IsNullOrWhiteSpace(message))
-                {
-                    OnLogMessage?.Invoke(mPlayingFile, message, position);
-                }
+                WriteMark(position, message);
+            }
+        }
+
+        private void WriteMark(long position, string message)
+        {
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                OnLogMessage?.Invoke(mPlayingFile, message, position);
             }
         }
 
