@@ -34,5 +34,7 @@ namespace WatchItOnce
         /// Number seconds to play. The player will be automatically closed after timer run out.
         /// </summary>
         public int AutoClose { get; internal set; }
+
+        public int InitialVolume { get; internal set; }
     }
 }

@@ -59,7 +59,8 @@ namespace WatchItOnce
             var playerOptions = new PlayerOptions()
             {
                 AutoNext = options.AutoNext,
-                AutoClose = options.AutoClose
+                AutoClose = options.AutoClose,
+                InitialVolume = options.Volume
             };
             var playerWindow = new PlayerWindow(mediaFiles, playerOptions);
             playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(PlayerWindow_OnMediaSkipped);

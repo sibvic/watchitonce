@@ -23,8 +23,8 @@ namespace WatchItOnce
             mProgressTimer = new System.Timers.Timer(500);
             mProgressTimer.Elapsed += new ElapsedEventHandler(UpdateProgress);
             mProgressTimer.Start();
-            
-            mOptions = options;
+
+            this.options = options;
             mFiles = files;
             mFilesIterator = mFiles.GetEnumerator();
             InitializeComponent();
@@ -56,19 +56,20 @@ namespace WatchItOnce
                 _nextButton,
                 _markWatchedButton
             });
+            CreateStrategy();
+        }
 
-            if (mOptions.AutoNext > 0)
+        private void CreateStrategy()
+        {
+            if (options.AutoNext > 0)
             {
-                strategy = new AutoNextStrategy(this, mOptions.AutoNext);
+                strategy = new AutoNextStrategy(this, options.AutoNext);
             }
-            else if (mOptions.AutoClose > 0)
+            else if (options.AutoClose > 0)
             {
-                strategy = new AutoCloseStrategy(this, mOptions.AutoClose);
+                strategy = new AutoCloseStrategy(this, options.AutoClose);
             }
-            else
-            {
-                strategy = new DefaultStrategy();
-            }
+            strategy = new DefaultStrategy();
         }
 
         private void _markWatchedButton_Click(object sender, ThumbnailButtonClickedEventArgs e) => DoMarkWatched(false);
@@ -81,7 +82,7 @@ namespace WatchItOnce
         public event OnMediaSkippedDelegate OnMediaSkipped;
         public event OnLogMessageDelegate OnLogMessage;
 
-        PlayerOptions mOptions;
+        PlayerOptions options;
         IMediaFileIterator mFiles;
         IEnumerator<MediaFile> mFilesIterator;
 
@@ -154,7 +155,7 @@ namespace WatchItOnce
             Text = _mediaName;
         }
 
-        private bool PlayNextVideo()
+        private bool PlayNextVideo(int? volume = null)
         {
             MediaFile next = GetNextFile();
             if (next == null)
@@ -167,7 +168,7 @@ namespace WatchItOnce
 
             BeginInvoke(new Action(delegate
             {
-                int vol = mPlayer.Volume;
+                int vol = volume ?? mPlayer.Volume;
                 Open(next);
                 mPlayerController.Play();
                 mPlayerController.Seek(next.PositionSeconds * 1000);
@@ -414,7 +415,10 @@ namespace WatchItOnce
                 mPlayerController.Pause();
         }
 
-        private void PlayerWindow_Load(object sender, EventArgs e) => PlayNextVideo();
+        private void PlayerWindow_Load(object sender, EventArgs e)
+        {
+            PlayNextVideo(options.InitialVolume);
+        }
 
         private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {

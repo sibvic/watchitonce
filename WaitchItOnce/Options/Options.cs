@@ -47,7 +47,10 @@ namespace WatchItOnce
 
         [Option("tomato", Required = false, HelpText = "Tomato timer in seconds.", Default = 0)]
         public int AutoClose { get; set; }
-        
+
+        [Option("volume", Required = false, HelpText = "Tomato timer in seconds.", Default = 100)]
+        public int Volume { get; set; }
+
         public SortOrder SortOrder
         {
             get
