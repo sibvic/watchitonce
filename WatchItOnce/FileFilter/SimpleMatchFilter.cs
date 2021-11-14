@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using WatchItOnce;
+﻿using WatchItOnce.Core;
 
 namespace WatchItOnce.FileFilter
 {
@@ -11,14 +6,14 @@ namespace WatchItOnce.FileFilter
     {
         public SimpleMatchFilter(string text)
         {
-            mText = text.ToLower();
+            this.text = text.ToLower();
         }
 
-        string mText;
+        string text;
 
         public bool IsPassing(string file)
         {
-            return System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(mText);
+            return System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(text);
         }
     }
 }

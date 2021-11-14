@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using WatchItOnce;
+using WatchItOnce.Core;
 
 namespace WatchItOnce.MediaFileIterator
 {

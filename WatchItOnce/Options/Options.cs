@@ -18,20 +18,15 @@
 // ========================================================================
 
 using CommandLine;
+using WatchItOnce.Core;
 
 namespace WatchItOnce
 {
-    public enum ScreenPosition
-    {
-        Default,
-        TopLeft,
-        BottomLeft,
-        TopRight,
-        BottomRight
-    }
     [Verb("play", HelpText = "Play files.")]
     public class Options
     {
+        [Option("file", Required = false, HelpText = "Path to file to play.")]
+        public string File { get; set; }
         [Option("filter", Required = false, HelpText = "Filter.")]
         public string Filter{ get; set; }
         [Option("rfilter", Required = false, HelpText = "Regexp filter.")]

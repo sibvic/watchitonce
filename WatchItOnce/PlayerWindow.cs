@@ -9,6 +9,7 @@ using System.Timers;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using WatchItOnce.Player;
 using WatchItOnce.Forms;
+using WatchItOnce.Core;
 
 namespace WatchItOnce
 {

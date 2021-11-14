@@ -108,4 +108,6 @@ Backup*/
 UpgradeLog*.XML
 /3rd_party/plugins
 /3rd_party
-/.vs
+.vs
+
+WatchItOnceManager/Properties/launchSettings.json

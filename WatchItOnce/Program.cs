@@ -20,6 +20,7 @@
 using CommandLine;
 using System;
 using System.Windows.Forms;
+using WatchItOnce.Core;
 using WatchItOnce.FileFilter;
 using WatchItOnce.MediaFileIterator;
 
@@ -44,8 +45,7 @@ namespace WatchItOnce
         }
         public static int Execute(Options options)
         {
-            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), CreateFilter(options),
-                options.Extensions.Split(new char[] { ';' }));
+            MediaFile[] files = GetFilesToPlay(options);
             if (files.Length == 0)
             {
                 MessageBox.Show("No files to play");
@@ -71,6 +71,16 @@ namespace WatchItOnce
             MoveWindow(playerWindow, options.ScreenPosition);
             Application.Run(playerWindow);
             return 0;
+        }
+
+        private static MediaFile[] GetFilesToPlay(Options options)
+        {
+            if (string.IsNullOrEmpty(options.File))
+            {
+                return MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), CreateFilter(options),
+                    options.Extensions.Split(new char[] { ';' }));
+            }
+            return new[] { new MediaFile(options.File) };
         }
 
         private static void MoveWindow(PlayerWindow playerWindow, ScreenPosition screenPosition)

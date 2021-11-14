@@ -69,7 +69,6 @@
     <Compile Include="Forms\AskMessageForm.Designer.cs">
       <DependentUpon>AskMessageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="IFileFilter.cs" />
     <Compile Include="IMediaFileIterator.cs" />
     <Compile Include="FileFilter\SimpleMatchFilter.cs" />
     <Compile Include="MediaFileIterator\OrderedIterator.cs" />
@@ -84,8 +83,6 @@
     <Compile Include="PlayerWindow.Designer.cs">
       <DependentUpon>PlayerWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MediaFile.cs" />
-    <Compile Include="MediaFileScanner.cs" />
     <Compile Include="Options\Options.cs" />
     <Compile Include="Player\AutoCloseStrategy.cs" />
     <Compile Include="Player\AutoNextStrategy.cs" />
@@ -130,6 +127,10 @@
     <ProjectReference Include="..\LibVlcWrapper\LibVlcWrapper.csproj">
       <Project>{57F08087-B175-4C96-BE36-83FBC4A21065}</Project>
       <Name>LibVlcWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WatchItOnceCore\WatchItOnceCore.csproj">
+      <Project>{e11f7382-3a88-437b-94ed-7bf36b0b51b7}</Project>
+      <Name>WatchItOnceCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

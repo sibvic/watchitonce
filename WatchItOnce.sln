@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchItOnce", "WatchItOnce\WatchItOnce.csproj", "{519B1B35-A242-43A8-9B48-BFD7DE9D038A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVlcWrapper", "LibVlcWrapper\LibVlcWrapper.csproj", "{57F08087-B175-4C96-BE36-83FBC4A21065}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchItOnceManager", "WatchItOnceManager\WatchItOnceManager.csproj", "{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchItOnceCore", "WatchItOnceCore\WatchItOnceCore.csproj", "{E11F7382-3A88-437B-94ED-7BF36B0B51B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,22 @@ Global
 		{57F08087-B175-4C96-BE36-83FBC4A21065}.Release|Any CPU.Build.0 = Release|x86
 		{57F08087-B175-4C96-BE36-83FBC4A21065}.Release|x86.ActiveCfg = Release|x86
 		{57F08087-B175-4C96-BE36-83FBC4A21065}.Release|x86.Build.0 = Release|x86
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Debug|x86.Build.0 = Debug|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F75D069-1C02-42D0-BFA0-A03D213BF8D5}.Release|x86.Build.0 = Release|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{E11F7382-3A88-437B-94ED-7BF36B0B51B7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
