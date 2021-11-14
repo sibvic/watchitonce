@@ -17,8 +17,10 @@
 //     
 // ========================================================================
 
+using CommandLine;
 using System;
 using System.Windows.Forms;
+using WatchItOnce.FileFilter;
 using WatchItOnce.MediaFileIterator;
 
 namespace WatchItOnce
@@ -31,28 +33,23 @@ namespace WatchItOnce
         [STAThread]
         static void Main(string[] args)
         {
-            Options options = new Options();
-            try
+            var result = Parser.Default.ParseArguments<Options>(args)
+                .MapResult(
+                    (Options opts) => Execute(opts),
+                    errs => 1);
+            if (result != 0)
             {
-                options.Load(args);
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show(ex.Message);
                 return;
             }
-            catch (NotSupportedException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
-
-            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), options.Filter,
-                options.Extensions.ToArray());
+        }
+        public static int Execute(Options options)
+        {
+            MediaFile[] files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), CreateFilter(options),
+                options.Extensions.Split(new char[] { ';' }));
             if (files.Length == 0)
             {
                 MessageBox.Show("No files to play");
-                return;
+                return -1;
             }
 
             IMediaFileIterator mediaFiles = CreateIterator(options, files);
@@ -70,6 +67,20 @@ namespace WatchItOnce
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(PlayerWindow_OnMediaEnded);
             playerWindow.OnLogMessage += PlayerWindow_OnLogMessage;
             Application.Run(playerWindow);
+            return 0;
+        }
+
+        private static IFileFilter CreateFilter(Options options)
+        {
+            if (!string.IsNullOrEmpty(options.Filter))
+            {
+                return new SimpleMatchFilter(options.Filter);
+            }
+            if (!string.IsNullOrEmpty(options.RegexpFilterString))
+            {
+                return new RegexpMatchFilter(options.RegexpFilterString);
+            }
+            return null;
         }
 
         static string FormatPosition(long position)

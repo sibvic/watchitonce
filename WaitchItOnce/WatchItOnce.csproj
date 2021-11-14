@@ -37,8 +37,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.8.0\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
@@ -72,10 +75,7 @@
     <Compile Include="MediaFileIterator\OrderedIterator.cs" />
     <Compile Include="MediaFileIterator\RandomIterator.cs" />
     <Compile Include="MediaFileIterator\SoredByNameIterator.cs" />
-    <Compile Include="OptionControllers\AutoCloseOptionController.cs" />
-    <Compile Include="OptionControllers\AutoNextOptionController.cs" />
-    <Compile Include="OptionControllers\IOptionController.cs" />
-    <Compile Include="OptionControllers\SortOrder.cs" />
+    <Compile Include="Options\SortOrder.cs" />
     <Compile Include="PlayerController.cs" />
     <Compile Include="PlayerOptions.cs" />
     <Compile Include="PlayerWindow.cs">
@@ -86,7 +86,7 @@
     </Compile>
     <Compile Include="MediaFile.cs" />
     <Compile Include="MediaFileScanner.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="Options\Options.cs" />
     <Compile Include="Player\AutoCloseStrategy.cs" />
     <Compile Include="Player\AutoNextStrategy.cs" />
     <Compile Include="Player\DefaultStrategy.cs" />

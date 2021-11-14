@@ -57,13 +57,13 @@ namespace WatchItOnce
                 _markWatchedButton
             });
 
-            if (mOptions.AutoNext.HasValue)
+            if (mOptions.AutoNext > 0)
             {
-                strategy = new AutoNextStrategy(this, mOptions.AutoNext.Value);
+                strategy = new AutoNextStrategy(this, mOptions.AutoNext);
             }
-            else if (mOptions.AutoClose.HasValue)
+            else if (mOptions.AutoClose > 0)
             {
-                strategy = new AutoCloseStrategy(this, mOptions.AutoClose.Value);
+                strategy = new AutoCloseStrategy(this, mOptions.AutoClose);
             }
             else
             {

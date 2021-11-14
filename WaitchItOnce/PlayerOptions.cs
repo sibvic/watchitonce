@@ -28,11 +28,11 @@ namespace WatchItOnce
         {
         }
 
-        public int? AutoNext { get; internal set; }
+        public int AutoNext { get; internal set; }
 
         /// <summary>
         /// Number seconds to play. The player will be automatically closed after timer run out.
         /// </summary>
-        public int? AutoClose { get; internal set; }
+        public int AutoClose { get; internal set; }
     }
 }
