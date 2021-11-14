@@ -58,6 +58,21 @@ namespace WatchItOnce
             });
             CreateStrategy();
         }
+        
+        private void PlayerWindow_Load(object sender, EventArgs e)
+        {
+            PlayNextVideo(options.InitialVolume);
+            mPlayer.PlaybackRate = 1.0f + options.Speed / 10.0f;
+        }
+
+        private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            strategy.Dispose();
+            if (OnMediaSkipped != null && mPlayingFile != null)
+                OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
+            mProgressTimer.Stop();
+            mProgressTimer.Dispose();
+        }
 
         private void CreateStrategy()
         {
@@ -94,14 +109,14 @@ namespace WatchItOnce
         int mLastTop;
         int mLastLeft;
         MediaFile mPlayingFile;
-        System.Timers.Timer mProgressTimer;
+        readonly System.Timers.Timer mProgressTimer;
 
         string _mediaName;
         long? _lastPosition;
 
-        private ThumbnailToolBarButton _playPauseButton;
-        private ThumbnailToolBarButton _nextButton;
-        private ThumbnailToolBarButton _markWatchedButton;
+        private readonly ThumbnailToolBarButton _playPauseButton;
+        private readonly ThumbnailToolBarButton _nextButton;
+        private readonly ThumbnailToolBarButton _markWatchedButton;
 
         private void UpdateProgress(object sender, ElapsedEventArgs e)
         {
@@ -413,20 +428,6 @@ namespace WatchItOnce
             }
             if (!PlayNextVideo())
                 mPlayerController.Pause();
-        }
-
-        private void PlayerWindow_Load(object sender, EventArgs e)
-        {
-            PlayNextVideo(options.InitialVolume);
-        }
-
-        private void PlayerWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            strategy.Dispose();
-            if (OnMediaSkipped != null && mPlayingFile != null)
-                OnMediaSkipped(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
-            mProgressTimer.Stop();
-            mProgressTimer.Dispose();
         }
 
         public void DoNext()

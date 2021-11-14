@@ -50,6 +50,8 @@ namespace WatchItOnce
 
         [Option("volume", Required = false, HelpText = "Tomato timer in seconds.", Default = 100)]
         public int Volume { get; set; }
+        [Option("speed", Required = false, HelpText = "Speed multiplier 1.x.", Default = 0)]
+        public int Speed { get; set; }
 
         public SortOrder SortOrder
         {

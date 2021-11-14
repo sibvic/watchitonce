@@ -36,5 +36,6 @@ namespace WatchItOnce
         public int AutoClose { get; internal set; }
 
         public int InitialVolume { get; internal set; }
+        public int Speed { get; internal set; }
     }
 }
