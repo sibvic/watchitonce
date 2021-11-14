@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchItOnce", "WaitchItOnce\WatchItOnce.csproj", "{519B1B35-A242-43A8-9B48-BFD7DE9D038A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchItOnce", "WatchItOnce\WatchItOnce.csproj", "{519B1B35-A242-43A8-9B48-BFD7DE9D038A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVlcWrapper", "LibVlcWrapper\LibVlcWrapper.csproj", "{57F08087-B175-4C96-BE36-83FBC4A21065}"
 EndProject
