@@ -18,13 +18,17 @@
 // ========================================================================
 
 using CommandLine;
-using System;
-using System.Collections.Generic;
-
-using WatchItOnce.FileFilter;
 
 namespace WatchItOnce
 {
+    public enum ScreenPosition
+    {
+        Default,
+        TopLeft,
+        BottomLeft,
+        TopRight,
+        BottomRight
+    }
     [Verb("play", HelpText = "Play files.")]
     public class Options
     {
@@ -52,6 +56,8 @@ namespace WatchItOnce
         public int Volume { get; set; }
         [Option("speed", Required = false, HelpText = "Speed multiplier 1.x.", Default = 0)]
         public int Speed { get; set; }
+        [Option("screen-position", Required = false, HelpText = "Positon on the screen.", Default = ScreenPosition.Default)]
+        public ScreenPosition ScreenPosition { get; set; }
 
         public SortOrder SortOrder
         {

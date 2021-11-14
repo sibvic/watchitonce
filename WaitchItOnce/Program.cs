@@ -68,8 +68,40 @@ namespace WatchItOnce
             if (options.DeleteAfterWatch)
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(PlayerWindow_OnMediaEnded);
             playerWindow.OnLogMessage += PlayerWindow_OnLogMessage;
+            MoveWindow(playerWindow, options.ScreenPosition);
             Application.Run(playerWindow);
             return 0;
+        }
+
+        private static void MoveWindow(PlayerWindow playerWindow, ScreenPosition screenPosition)
+        {
+            switch (screenPosition)
+            {
+                case ScreenPosition.BottomLeft:
+                    playerWindow.Left = Screen.PrimaryScreen.WorkingArea.Left;
+                    playerWindow.Width = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Top = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    playerWindow.Height = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    break;
+                case ScreenPosition.BottomRight:
+                    playerWindow.Left = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Width = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Top = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    playerWindow.Height = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    break;
+                case ScreenPosition.TopLeft:
+                    playerWindow.Left = Screen.PrimaryScreen.WorkingArea.Left;
+                    playerWindow.Width = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Top = Screen.PrimaryScreen.WorkingArea.Top;
+                    playerWindow.Height = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    break;
+                case ScreenPosition.TopRight:
+                    playerWindow.Left = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Width = Screen.PrimaryScreen.WorkingArea.Width / 2;
+                    playerWindow.Top = Screen.PrimaryScreen.WorkingArea.Top;
+                    playerWindow.Height = Screen.PrimaryScreen.WorkingArea.Height / 2;
+                    break;
+            }
         }
 
         private static IFileFilter CreateFilter(Options options)
