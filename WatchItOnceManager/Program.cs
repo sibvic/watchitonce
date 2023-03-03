@@ -55,9 +55,14 @@ namespace WatchItOnce.Manager
 
         private static string GetDefaultArguments(Options opts)
         {
-            return "--volume " + opts.Volume
+            var args = "--volume " + opts.Volume
                 + " --speed " + opts.Speed
                 + " --extensions " + opts.Extensions;
+            if (opts.DeleteAfterWatch)
+            {
+                args += " --delete";
+            }
+            return args;
         }
     }
 }

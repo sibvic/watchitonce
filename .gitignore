@@ -111,3 +111,4 @@ UpgradeLog*.XML
 .vs
 
 WatchItOnceManager/Properties/launchSettings.json
+WatchItOnce/WatchItOnce_TemporaryKey.pfx

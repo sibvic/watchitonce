@@ -19,6 +19,7 @@ namespace WatchItOnce
 
     public partial class PlayerWindow : Form, IPlayerWindowController
     {
+        KeyboardHook hook = new KeyboardHook();
         public PlayerWindow(IMediaFileIterator files, PlayerOptions options)
         {
             mProgressTimer = new System.Timers.Timer(500);
@@ -58,8 +59,34 @@ namespace WatchItOnce
                 _markWatchedButton
             });
             CreateStrategy();
+            hook.KeyPressed += new EventHandler<KeyPressedEventArgs>(hook_KeyPressed);
+            try
+            {
+                hook.RegisterHotKey(0, Keys.F13);
+                hook.RegisterHotKey(0, Keys.F14);
+                hook.RegisterHotKey(0, Keys.F19);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
-        
+
+        void hook_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Keys.F13:
+                    DoPlayPause();
+                    break;
+                case Keys.F14:
+                    DoMarkWatched(false);
+                    break;
+                case Keys.F19:
+                    DoNext();
+                    break;
+            }
+        }
+
         private void PlayerWindow_Load(object sender, EventArgs e)
         {
             PlayNextVideo(options.InitialVolume);
@@ -98,13 +125,12 @@ namespace WatchItOnce
         public event OnMediaSkippedDelegate OnMediaSkipped;
         public event OnLogMessageDelegate OnLogMessage;
 
-        PlayerOptions options;
-        IMediaFileIterator mFiles;
-        IEnumerator<MediaFile> mFilesIterator;
-
-        IMediaPlayerFactory mPlayerFactory;
-        IDiskPlayer mPlayer;
-        PlayerController mPlayerController;
+        readonly PlayerOptions options;
+        readonly IMediaFileIterator mFiles;
+        readonly IEnumerator<MediaFile> mFilesIterator;
+        readonly IMediaPlayerFactory mPlayerFactory;
+        readonly IDiskPlayer mPlayer;
+        readonly PlayerController mPlayerController;
         int mLastWidth;
         int mLastHeight;
         int mLastTop;

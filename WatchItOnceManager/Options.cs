@@ -18,5 +18,7 @@ namespace WatchItOnce.Manager
         public PlayMode Mode { get; set; }
         [Option("extensions", Required = false, HelpText = "Extensions to use.", Default = "*.mkv;*.avi;*.mp4;*.webm;*.wmv;*.vob;*.ts;*.mpg;*.m4v;*.mp3;*.m4a;*.webm")]
         public string Extensions { get; set; }
+        [Option("delete", Required = false, HelpText = "Delete file after watching.")]
+        public bool DeleteAfterWatch { get; set; }
     }
 }
