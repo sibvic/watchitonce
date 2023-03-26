@@ -39,7 +39,7 @@ namespace WatchItOnce
         public bool RandomContinue { get; set; }
         [Option("sort-by-name", Required = false, HelpText = "Sort by name.")]
         public bool SortByName { get; set; }
-        [Option("extensions", Required = false, HelpText = "Extensions to use.", Default = "*.mkv;*.avi;*.mp4;*.webm;*.wmv;*.vob;*.ts;*.mpg;*.m4v;*.mp3;*.m4a;*.webm")]
+        [Option("extensions", Required = false, HelpText = "Extensions to use.", Default = "*.mkv;*.avi;*.mp4;*.webm;*.wmv;*.vob;*.ts;*.mpg;*.m4v;*.mp3;*.m4a")]
         public string Extensions { get; set; }
         [Option("autonext", Required = false, HelpText = "Go next file after X seconds.", Default = 0)]
         public int AutoNext { get; set; }
