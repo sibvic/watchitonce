@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace WatchItOnce.Core
 {
@@ -25,7 +26,7 @@ namespace WatchItOnce.Core
                 {
                     ScannFolder(folder);
                 }
-                foreach (string extension in extensions)
+                foreach (string extension in extensions.Distinct())
                 {
                     foreach (string file in fileListProvider.GetFiles(path, extension))
                     {
