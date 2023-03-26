@@ -77,7 +77,7 @@ namespace WatchItOnce
         {
             if (string.IsNullOrEmpty(options.File))
             {
-                return MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), CreateFilter(options),
+                return MediaFileProvider.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), CreateFilter(options),
                     options.Extensions.Split(new char[] { ';' }));
             }
             return new[] { new MediaFile(options.File) };

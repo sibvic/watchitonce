@@ -3,32 +3,35 @@ using System.IO;
 
 namespace WatchItOnce.Core
 {
+
     public class MediaFileScanner
     {
-        MediaFileScanner(IFileFilter filter, string[] extensions)
+        public MediaFileScanner(IFileFilter filter, string[] extensions, IFileListProvider fileListProvider)
         {
             this.filter = filter;
             this.extensions = extensions;
+            this.fileListProvider = fileListProvider;
         }
 
         readonly IFileFilter filter;
         readonly string[] extensions;
+        private readonly IFileListProvider fileListProvider;
 
-        void ScannFolder(string path)
+        public void ScannFolder(string path)
         {
             try
             {
-                foreach (string folder in Directory.GetDirectories(path))
+                foreach (string folder in fileListProvider.GetDirectories(path))
                 {
                     ScannFolder(folder);
                 }
                 foreach (string extension in extensions)
                 {
-                    foreach (string file in Directory.GetFiles(path, extension))
+                    foreach (string file in fileListProvider.GetFiles(path, extension))
                     {
                         if (filter != null && !filter.IsPassing(file))
                             continue;
-                        files.Add(new MediaFile(file));
+                        Files.Add(new MediaFile(file));
                     }
                 }
             }
@@ -37,13 +40,6 @@ namespace WatchItOnce.Core
             }
         }
 
-        readonly List<MediaFile> files = new List<MediaFile>();
-
-        public static MediaFile[] GetFromFolder(string path, IFileFilter filter, string[] extensions)
-        {
-            MediaFileScanner scaner = new MediaFileScanner(filter, extensions);
-            scaner.ScannFolder(path);
-            return scaner.files.ToArray();
-        }
+        public List<MediaFile> Files { get; } = new List<MediaFile>();
     }
 }
