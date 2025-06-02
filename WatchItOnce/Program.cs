@@ -65,6 +65,7 @@ namespace WatchItOnce
             };
             var playerWindow = new PlayerWindow(mediaFiles, playerOptions);
             playerWindow.OnMediaSkipped += new OnMediaSkippedDelegate(PlayerWindow_OnMediaSkipped);
+            playerWindow.OnMediaPaused += new OnMediaSkippedDelegate(PlayerWindow_OnMediaPaused);
             if (options.DeleteAfterWatch)
                 playerWindow.OnMediaEnded += new OnMediaEndedDelegate(PlayerWindow_OnMediaEnded);
             playerWindow.OnLogMessage += PlayerWindow_OnLogMessage;
@@ -172,8 +173,18 @@ namespace WatchItOnce
 
         static void PlayerWindow_OnMediaSkipped(MediaFile file, long lastPosition)
         {
+            SaveLocation(file, lastPosition);
+        }
+
+        private static void SaveLocation(MediaFile file, long lastPosition)
+        {
             string infoPath = file.Path + ".info";
             System.IO.File.WriteAllText(infoPath, lastPosition.ToString());
+        }
+
+        static void PlayerWindow_OnMediaPaused(MediaFile file, long lastPosition)
+        {
+            SaveLocation(file, lastPosition);
         }
     }
 }

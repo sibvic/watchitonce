@@ -36,7 +36,7 @@ namespace WatchItOnce.Manager
 
         private static void PlayQuadFiles(Options opts)
         {
-            var files = MediaFileScanner.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), new NoFilter(), opts.Extensions.Split(new char[] { ';' }))
+            var files = MediaFileProvider.GetFromFolder(System.IO.Directory.GetCurrentDirectory(), new NoFilter(), opts.Extensions.Split(new char[] { ';' }))
                 .Take(4)
                 .ToArray();
             var commonArgs = GetDefaultArguments(opts);

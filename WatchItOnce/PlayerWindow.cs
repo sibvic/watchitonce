@@ -123,6 +123,7 @@ namespace WatchItOnce
 
         public event OnMediaEndedDelegate OnMediaEnded;
         public event OnMediaSkippedDelegate OnMediaSkipped;
+        public event OnMediaSkippedDelegate OnMediaPaused;
         public event OnLogMessageDelegate OnLogMessage;
 
         readonly PlayerOptions options;
@@ -442,7 +443,12 @@ namespace WatchItOnce
 
         void Events_PlayerStopped(object sender, EventArgs e) => strategy.OnStopped();
         void Events_PlayerPlaying(object sender, EventArgs e) => strategy.OnStarted();
-        void Events_PlayerPaused(object sender, EventArgs e) => strategy.OnPaused();
+        void Events_PlayerPaused(object sender, EventArgs e)
+        {
+            if (mPlayingFile != null && OnMediaPaused != null)
+                OnMediaPaused(mPlayingFile, (long)(mPlayer.Length * mPlayer.Position / 1000));
+            strategy.OnPaused();
+        }
 
         void Events_MediaEnded(object sender, EventArgs e)
         {
