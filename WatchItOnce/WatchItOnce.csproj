@@ -53,13 +53,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>8E855D2C5D2829DD6A2C6290B3FA7544D7F39F04</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>0C23939966FBD9DF59C77C61C2FF0EB1CAEA896B</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>WatchItOnce_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
